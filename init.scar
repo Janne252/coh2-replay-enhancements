@@ -1,0 +1,7 @@
+-- dofile("replay-enhancements\\init.scar")
+function ReplayEnhancements_Init()
+    Scar_DoString([[loadfile("replay-enhancements\\data.scar")()]])
+    Scar_DoString([[loadfile("replay-enhancements\\api.scar")()]])
+end
+
+ReplayEnhancements_Init()

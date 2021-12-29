@@ -1,0 +1,1900 @@
+ReplayEnhancementsData = {
+	sbps = {
+		["m4a3_sherman_squad_demo_burnout"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["pm_riflemen_squad_omcg"] = {
+			icon = "Icons_units_unit_aef_riflemen",
+			screen_name = 11078032,
+		},
+		["aef_attack_plane_squad"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["pm_m3_halftrack_squad_omcg"] = {
+			icon = "Icons_vehicles_vehicle_aef_halftrack_m3",
+			screen_name = 11051096,
+		},
+		["pm_aef_airborne_paratroopers_plane_paras"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["pm_aef_airborne_paratroopers_plane_strafe"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["aef_air_support_recon"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["aef_air_support_rocket"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["aef_air_support_rocket_elite"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["aef_air_support_strafe"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["aef_air_support_strafe_elite"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["p47_flyby"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["p47_mg_strafe"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["p47_rockets_strafe"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["pm_aef_airborne_supply_drop_plane"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["jackson_squad"] = {
+			icon = "Icons_units_unit_aef_officer_major",
+			screen_name = 11077132,
+		},
+		["assault_engineer_squad_5_man_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["assault_engineer_squad_mp"] = {
+			icon = "Icons_units_unit_aef_assault_engineers",
+			screen_name = 11051141,
+		},
+		["captain_squad_mp"] = {
+			icon = "Icons_units_unit_aef_officer_captain",
+			screen_name = 11051142,
+		},
+		["lieutenant_squad_mp"] = {
+			icon = "Icons_units_unit_aef_officer_lieutenant",
+			screen_name = 11051143,
+		},
+		["major_squad_mp"] = {
+			icon = "Icons_units_unit_aef_officer_major",
+			screen_name = 11051146,
+		},
+		["paratrooper_combat_group_squad_mp"] = {
+			icon = "Icons_units_unit_aef_paratroopers",
+			screen_name = 11051147,
+		},
+		["paratrooper_squad_mp"] = {
+			icon = "Icons_units_unit_aef_paratroopers",
+			screen_name = 11051147,
+		},
+		["paratrooper_squad_support_mp"] = {
+			icon = "Icons_units_unit_aef_paratroopers",
+			screen_name = 11145670,
+		},
+		["pathfinder_squad_mp"] = {
+			icon = "Icons_units_unit_aef_pathfinders",
+			screen_name = 11052706,
+		},
+		["pathfinder_squad_recon_mp"] = {
+			icon = "Icons_units_unit_aef_pathfinders",
+			screen_name = 11075407,
+		},
+		["ranger_squad_commander_mp"] = {
+			icon = "Icons_units_unit_aef_ranger",
+			screen_name = 11077780,
+		},
+		["ranger_squad_mp"] = {
+			icon = "Icons_units_unit_aef_ranger",
+			screen_name = 11077780,
+		},
+		["rear_echelon_squad_mp"] = {
+			icon = "Icons_units_unit_aef_rear_echelon_troops",
+			screen_name = 11051148,
+		},
+		["riflemen_cavalry_squad_mp"] = {
+			icon = "Icons_units_unit_aef_assault_riflemen",
+			screen_name = 11157632,
+		},
+		["riflemen_squad_mp"] = {
+			icon = "Icons_units_unit_aef_riflemen",
+			screen_name = 11075429,
+		},
+		["riflemen_squad_veteran_mp"] = {
+			icon = "Icons_commander_cmdr_aef_elite_riflemen_training",
+			screen_name = 11051039,
+		},
+		["usf_medic_squad_mp"] = {
+			icon = "Icons_units_unit_aef_medic",
+			screen_name = 11071364,
+		},
+		["m20_assault_engy_antitank_squad_mp"] = {
+			icon = "Icons_units_unit_aef_vehicle_crew",
+			screen_name = 11053521,
+		},
+		["vehicle_crew_bazooka_squad_mp"] = {
+			icon = "Icons_units_unit_aef_vehicle_crew",
+			screen_name = 11072092,
+		},
+		["vehicle_crew_squad_mp"] = {
+			icon = "Icons_units_unit_aef_vehicle_crew",
+			screen_name = 11053521,
+		},
+		["m1919a4_hmg_squad_mp"] = {
+			icon = "Icons_units_unit_soviet_mg",
+			screen_name = 11051357,
+		},
+		["m1_57mm_at_gun_squad_bob"] = {
+			icon = "Icons_vehicles_vehicle_aef_57mm_at_gun",
+			screen_name = 11051149,
+		},
+		["m1_57mm_at_gun_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_57mm_at_gun",
+			screen_name = 11051149,
+		},
+		["m1_75mm_pack_howitzer_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_pack_howitzer",
+			screen_name = 11051150,
+		},
+		["m1_81mm_mortar_squad_mp"] = {
+			icon = "Icons_units_unit_aef_mortar_crew",
+			screen_name = 11116620,
+		},
+		["m2_60mm_mortar_core_squad_mp"] = {
+			icon = "Icons_units_unit_aef_mortar_crew",
+			screen_name = 11051114,
+		},
+		["m2_60mm_mortar_squad_mp"] = {
+			icon = "Icons_units_unit_aef_mortar_crew",
+			screen_name = 11051114,
+		},
+		["m2_60mm_mortar_squad_mp_clone"] = {
+			icon = "Icons_units_unit_aef_mortar_crew",
+			screen_name = 11051114,
+		},
+		["m2hb_50cal_hmg_squad_mp"] = {
+			icon = "Icons_units_unit_aef_hmg_m2hb",
+			screen_name = 11051145,
+		},
+		["dodge_wc51_50cal_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_wc51_50cal",
+			screen_name = 11145768,
+		},
+		["dodge_wc51_ambulance_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_wc51_ambulance",
+			screen_name = 11054809,
+		},
+		["dodge_wc51_pathfinder_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_wc51_50cal",
+			screen_name = 11074405,
+		},
+		["dodge_wc51_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_wc51_50cal",
+			screen_name = 11051098,
+		},
+		["m10_tank_destroyer_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m10_tank_destroyer",
+			screen_name = 11051151,
+		},
+		["m20_utility_car_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m20_utility_car",
+			screen_name = 11051097,
+		},
+		["m26_pershing_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m26_pershing",
+			screen_name = 11084323,
+		},
+		["m36_tank_destroyer_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m36_jackson",
+			screen_name = 11051152,
+		},
+		["m15a1_aa_halftrack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_halftrack_m15a1_aa",
+			screen_name = 11052802,
+		},
+		["m21_mortar_halftrack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_halftrack_m21_mortar",
+			screen_name = 11052800,
+		},
+		["m3_halftrack_assault_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_halftrack_m3",
+			screen_name = 11157692,
+		},
+		["m3_halftrack_squad_assault_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_halftrack_m3",
+			screen_name = 11072581,
+		},
+		["m3_halftrack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_halftrack_m3",
+			screen_name = 11051096,
+		},
+		["m4a3_76mm_sherman_bulldozer_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m4a3_sherman_bulldozer",
+			screen_name = 11068300,
+		},
+		["m4a3_76mm_sherman_squad_commander_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m4a3_sherman_76mm",
+			screen_name = 11062929,
+		},
+		["m4a3_76mm_sherman_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m4a3_sherman",
+			screen_name = 11062929,
+		},
+		["m4a3_sherman_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m4a3_sherman",
+			screen_name = 11051040,
+		},
+		["m4a3e8_sherman_easy_8_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m4a3e8_sherman",
+			screen_name = 11053993,
+		},
+		["aef_halftrack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_m5_halftrack",
+			screen_name = 11007075,
+		},
+		["m5a1_stuart_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m5a1_stuart",
+			screen_name = 11051091,
+		},
+		["m7b1_priest_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m7b1_priest",
+			screen_name = 11051092,
+		},
+		["m8_greyhound_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m8_greyhound",
+			screen_name = 11051093,
+		},
+		["m8a1_hmc_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m8a1_hmc",
+			screen_name = 11051094,
+		},
+		["paratroopers_combat_group_plane"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["paratroopers_plane"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["paratroopers_plane_atgun"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["paratroopers_plane_hmg"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["paratroopers_plane_mines"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["paratroopers_plane_mines_matt_test_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["paratroopers_plane_paras"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["p47_recon"] = {
+			icon = "Icons_vehicles_vehicle_aef_p47_thunderbolt",
+			screen_name = 2091200,
+		},
+		["p47_recon_plane_sweep"] = {
+			icon = "Icons_vehicles_vehicle_aef_p47_thunderbolt",
+			screen_name = 2091200,
+		},
+		["p47_recon_tracking"] = {
+			icon = "Icons_vehicles_vehicle_aef_p47_thunderbolt",
+			screen_name = 2091200,
+		},
+		["p47_rockets"] = {
+			icon = "Icons_vehicles_vehicle_aef_p47_thunderbolt",
+			screen_name = 2091200,
+		},
+		["p47_strafes"] = {
+			icon = "Icons_vehicles_vehicle_aef_p47_thunderbolt",
+			screen_name = 2091200,
+		},
+		["p_47_mark_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_p47_thunderbolt",
+			screen_name = 2091200,
+		},
+		["t34_calliope_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_calliope",
+			screen_name = 11085973,
+		},
+		["brit_forward_hq_commander_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["brit_medic_squad_mp"] = {
+			icon = "Icons_units_unit_british_medic",
+			screen_name = 11083912,
+		},
+		["air_support_officer_squad_mp"] = {
+			icon = "Icons_units_unit_british_officer",
+			screen_name = 11095170,
+		},
+		["forward_observation_squad_mp"] = {
+			icon = "Icons_units_unit_british_forward_observation_officer",
+			screen_name = 11090780,
+		},
+		["commando_squad_mp"] = {
+			icon = "Icons_units_unit_british_commando",
+			screen_name = 11077200,
+		},
+		["commando_squad_piat_mp"] = {
+			icon = "Icons_units_unit_british_commando",
+			screen_name = 11095272,
+		},
+		["infiltration_commando_squad_mp"] = {
+			icon = "Icons_units_unit_british_commando",
+			screen_name = 11106607,
+		},
+		["sapper_squad_demolition_mp"] = {
+			icon = "Icons_units_unit_british_demolitions_engineer",
+			screen_name = 11090169,
+		},
+		["sapper_squad_mp"] = {
+			icon = "Icons_units_unit_british_engineer",
+			screen_name = 11077201,
+		},
+		["sapper_squad_recovery_mp"] = {
+			icon = "Icons_units_unit_british_engineer_recovery",
+			screen_name = 11090894,
+		},
+		["sniper_british_squad_mp"] = {
+			icon = "Icons_units_unit_british_sniper",
+			screen_name = 11077202,
+		},
+		["tommy_squad_assault_mp"] = {
+			icon = "Icons_units_brit_smg_section_8",
+			screen_name = 11167063,
+		},
+		["tommy_squad_flame_mp"] = {
+			icon = "Icons_units_unit_british_tommy_with_tommy",
+			screen_name = 11095632,
+		},
+		["tommy_squad_mp"] = {
+			icon = "Icons_units_unit_british_tommy_with_tommy",
+			screen_name = 11190919,
+		},
+		["tommy_squad_raid_mp"] = {
+			icon = "Icons_units_unit_british_raid_section",
+			screen_name = 11204018,
+		},
+		["tommy_squad_recon_mp"] = {
+			icon = "Icons_units_unit_british_tommy_recon",
+			screen_name = 11091108,
+		},
+		["tommy_squad_tank_hunter_mp"] = {
+			icon = "Icons_units_brit_at_section_5",
+			screen_name = 11096465,
+		},
+		["avre_vehicle_crew_squad_mp"] = {
+			icon = "Icons_units_unit_british_vehicle_crew",
+			screen_name = 11084133,
+		},
+		["vehicle_crew_standard_squad_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["brit_17_pounder_at_gun_squad_commander_mp"] = {
+			icon = "Icons_buildings_building_british_17_pounder",
+			screen_name = 11078174,
+		},
+		["brit_17_pounder_at_gun_squad_mp"] = {
+			icon = "Icons_buildings_building_british_17_pounder",
+			screen_name = 11078174,
+		},
+		["brit_6_pounder_at_gun_squad_commando_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_6_pounder_at_gun",
+			screen_name = 11077879,
+		},
+		["brit_6_pounder_at_gun_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_6_pounder_at_gun",
+			screen_name = 11077879,
+		},
+		["brit_bofors_40mm_autocannon_squad_commander_mp"] = {
+			icon = "Icons_buildings_building_british_bofors",
+			screen_name = 11083430,
+		},
+		["brit_bofors_40mm_autocannon_squad_mp"] = {
+			icon = "Icons_buildings_building_british_bofors",
+			screen_name = 11083430,
+		},
+		["british_machine_gun_squad_commando_mp"] = {
+			icon = "Icons_units_unit_british_commando_hmg",
+			screen_name = 11077887,
+		},
+		["british_machine_gun_squad_mp"] = {
+			icon = "Icons_units_unit_british_vickers_hmg",
+			screen_name = 11077887,
+		},
+		["forward_hq_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["brit_25_pounder_howitzer_squad_mp"] = {
+			icon = "Icons_units_placeholder_unit_brit_howitzer_25_pounder_placeholder",
+			screen_name = 11078179,
+		},
+		["brit_25_pounder_howitzer_squad_temp_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["brit_land_mattress_launcher_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_land_mattress",
+			screen_name = 11083653,
+		},
+		["m1_81mm_mortar_british_squad_commando_mp"] = {
+			icon = "Icons_commander_cmdr_commando_mortar",
+			screen_name = 11167475,
+		},
+		["m1_81mm_mortar_british_squad_mp"] = {
+			icon = "Icons_commander_brit_mortar",
+			screen_name = 11167475,
+		},
+		["brit_3_inch_mortar_team_commander_mp"] = {
+			icon = "Icons_buildings_building_british_3_inch_mortar_emplacement",
+			screen_name = 11077880,
+		},
+		["brit_3_inch_mortar_team_mp"] = {
+			icon = "Icons_buildings_building_british_3_inch_mortar_emplacement",
+			screen_name = 11077880,
+		},
+		["aec_armoured_car_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_mkiii_armored_car",
+			screen_name = 11084086,
+		},
+		["centaur_aa_mk2_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_centaur_aa",
+			screen_name = 11078053,
+		},
+		["churchill_avre_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_churchill_avre",
+			screen_name = 11077204,
+		},
+		["churchill_crocodile_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_churchill_crocodile",
+			screen_name = 11077205,
+		},
+		["churchill_default_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_churchill",
+			screen_name = 11077206,
+		},
+		["comet_tank_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_comet",
+			screen_name = 11077891,
+		},
+		["cromwell_mk4_75mm_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_cromwell",
+			screen_name = 11078316,
+		},
+		["glider_commandos_only_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_airspeed_horsa_glider",
+			screen_name = 11094968,
+		},
+		["glider_headquarters_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_airspeed_horsa_glider_hq",
+			screen_name = 11094971,
+		},
+		["hawker_typhoon_air_superiority_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["recon_hawker_typhoon_assault_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_hawker_typhoon",
+			screen_name = 11096511,
+		},
+		["recon_hawker_typhoon_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_hawker_typhoon",
+			screen_name = 11096510,
+		},
+		["rocket_hawker_typhoon_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_hawker_typhoon",
+			screen_name = 11096509,
+		},
+		["strafe_hawker_typhoon_command_hq_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_hawker_typhoon",
+			screen_name = 11096508,
+		},
+		["strafe_hawker_typhoon_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_hawker_typhoon",
+			screen_name = 11096508,
+		},
+		["m10_tank_destroyer_squad_british_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m10_tank_destroyer",
+			screen_name = 11167465,
+		},
+		["m3_halftrack_squad__resupply_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_halftrack_m3",
+			screen_name = 11051096,
+		},
+		["m5_halftrack_squad_brits_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_m5_halftrack",
+			screen_name = 11007075,
+		},
+		["paratroopers_plane_atgun_british_matt_test_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["paratroopers_plane_vickers_british_matt_test_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["british_cargo_plane"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11096508,
+		},
+		["british_hmg_plane"] = {
+			icon = "",
+			screen_name = 11096508,
+		},
+		["british_mortar_plane"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["spitfire_recon_plane"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11096508,
+		},
+		["typhoon_recon_plane_sweep"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["typhoon_recon_sweep"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["sexton_spg_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_sexton",
+			screen_name = 11077896,
+		},
+		["sherman_firefly_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_sherman_firefly",
+			screen_name = 11077208,
+		},
+		["universal_carrier_resupply"] = {
+			icon = "Icons_vehicles_vehicle_british_bren_carrier",
+			screen_name = 11091051,
+		},
+		["universal_carrier_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_bren_carrier",
+			screen_name = 11077897,
+		},
+		["valentine_mortar"] = {
+			icon = "Icons_vehicles_vehicle_aef_m7b1_priest",
+			screen_name = 11083423,
+		},
+		["valentine_observation_mp"] = {
+			icon = "Icons_vehicles_vehicle_british_valentine",
+			screen_name = 11095127,
+		},
+		["brit_bren_lmg_weapon_rack_ui_fake_mp"] = {
+			icon = "Icons_buildings_placeholder_placeholder_building_br_weapon_rack_bren_lmg",
+			screen_name = 11083668,
+		},
+		["brit_piat_launcher_weapon_rack_ui_fake_mp"] = {
+			icon = "Icons_buildings_placeholder_placeholder_building_br_weapon_rack_piat_launcher",
+			screen_name = 11083667,
+		},
+		["brit_forward_hq_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["m01_mg42_heavy_machine_gun_squad_single"] = {
+			icon = "Icons_units_unit_german_m1910_hmg",
+			screen_name = 11038498,
+		},
+		["m01_stuka_dogfight"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["m01_stuka_ground_attack_squad_fast"] = {
+			icon = "",
+			screen_name = 11038499,
+		},
+		["stuka_ground_attack_squad_long"] = {
+			icon = "",
+			screen_name = 11038500,
+		},
+		["partisan_squad_m13"] = {
+			icon = "Icons_units_unit_german_grenadier",
+			screen_name = 11032174,
+		},
+		["howitzer_105mm_dummy_squad"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["grenadier_squad_m14"] = {
+			icon = "Icons_units_unit_german_grenadier",
+			screen_name = 11038497,
+		},
+		["ostruppen_squad_m14"] = {
+			icon = "Icons_units_unit_german_grenadier",
+			screen_name = 11038496,
+		},
+		["panzer_grenadier_squad_m14"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["panzer_iv_squad_tutorial"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["opel_blitz_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_opel_blitz",
+			screen_name = 2146000,
+		},
+		["assault_grenadier_squad_mp"] = {
+			icon = "Icons_units_unit_german_assault_grenadier",
+			screen_name = 11051314,
+		},
+		["grenadier_squad"] = {
+			icon = "Icons_units_unit_german_grenadier",
+			screen_name = 11006996,
+		},
+		["grenadier_squad_mg42lmg_mp"] = {
+			icon = "Icons_units_unit_german_grenadier",
+			screen_name = 11006996,
+		},
+		["grenadier_squad_mp"] = {
+			icon = "Icons_units_unit_german_grenadier",
+			screen_name = 11006996,
+		},
+		["grenadier_squad_sp"] = {
+			icon = "Icons_units_unit_german_grenadier",
+			screen_name = 11010396,
+		},
+		["mg42_heavy_machine_gun_squad"] = {
+			icon = "Icons_units_unit_german_m1910_hmg",
+			screen_name = 11007136,
+		},
+		["mg42_heavy_machine_gun_squad_mp"] = {
+			icon = "Icons_units_unit_german_m1910_hmg",
+			screen_name = 11007136,
+		},
+		["mortar_team_81mm"] = {
+			icon = "Icons_units_unit_german_granatwerfer_34_mortar",
+			screen_name = 11007542,
+		},
+		["mortar_team_81mm_mp"] = {
+			icon = "Icons_units_unit_german_granatwerfer_34_mortar",
+			screen_name = 11007542,
+		},
+		["assault_officer_squad"] = {
+			icon = "Icons_units_unit_german_officer",
+			screen_name = 11038492,
+		},
+		["assault_officer_squad_luftwaffe_variant_mp"] = {
+			icon = "Icons_units_unit_german_luftwaffe_new",
+			screen_name = 11204034,
+		},
+		["assault_officer_squad_mp"] = {
+			icon = "Icons_units_unit_german_officer",
+			screen_name = 11035436,
+		},
+		["command_officer_squad_tow"] = {
+			icon = "Icons_units_unit_german_officer",
+			screen_name = 11055300,
+		},
+		["jaeger_officer_squad_mp"] = {
+			icon = "Icons_units_unit_jaegar_ost",
+			screen_name = 11145632,
+		},
+		["luftwaffe_officer_squad_tow"] = {
+			icon = "Icons_units_unit_german_officer",
+			screen_name = 11053774,
+		},
+		["officer_squad"] = {
+			icon = "Icons_units_unit_german_officer",
+			screen_name = 11032058,
+		},
+		["officer_squad_mp"] = {
+			icon = "Icons_units_unit_german_officer",
+			screen_name = 11032058,
+		},
+		["ostruppen_squad"] = {
+			icon = "Icons_units_unit_german_ostruppen",
+			screen_name = 11010409,
+		},
+		["ostruppen_squad_mp"] = {
+			icon = "Icons_units_unit_german_ostruppen",
+			screen_name = 11010409,
+		},
+		["ostruppen_squad_reserves_mp"] = {
+			icon = "Icons_units_unit_german_ostruppen",
+			screen_name = 11071085,
+		},
+		["panzer_grenadier_squad"] = {
+			icon = "Icons_units_unit_german_panzer_grenadier",
+			screen_name = 11007025,
+		},
+		["panzer_grenadier_squad_mp"] = {
+			icon = "Icons_units_unit_german_panzer_grenadier",
+			screen_name = 11007025,
+		},
+		["urban_assault_panzer_grenadier_squad_mp"] = {
+			icon = "Icons_units_unit_german_urban_assault_panzer_grenadier",
+			screen_name = 11052733,
+		},
+		["convoy_pioneer_squad"] = {
+			icon = "Icons_units_unit_german_pioneer",
+			screen_name = 11006988,
+		},
+		["hack_invisi_pioneer_squad_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["pioneer_squad"] = {
+			icon = "Icons_units_unit_german_pioneer",
+			screen_name = 11006988,
+		},
+		["pioneer_squad_mp"] = {
+			icon = "Icons_units_unit_german_pioneer",
+			screen_name = 11006988,
+		},
+		["pioneer_squad_tow"] = {
+			icon = "Icons_units_unit_german_pioneer",
+			screen_name = 11006988,
+		},
+		["sniper_squad"] = {
+			icon = "Icons_units_unit_german_sniper",
+			screen_name = 11006997,
+		},
+		["sniper_squad_mp"] = {
+			icon = "Icons_units_unit_german_sniper",
+			screen_name = 11006997,
+		},
+		["stormtrooper_squad_mp"] = {
+			icon = "Icons_units_unit_german_stormtroopers",
+			screen_name = 11052710,
+		},
+		["pak40_75mm_at_gun_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_pak_40_75mm_at_gun",
+			screen_name = 11007004,
+		},
+		["pak40_75mm_at_gun_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_pak_40_75mm_at_gun",
+			screen_name = 11007004,
+		},
+		["pak43_88mm_at_gun_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_pak_43_at_gun",
+			screen_name = 11007007,
+		},
+		["pak43_88mm_at_gun_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_pak_43_at_gun",
+			screen_name = 11007007,
+		},
+		["brummbar_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_sturmpanzer",
+			screen_name = 11007030,
+		},
+		["brummbar_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_sturmpanzer",
+			screen_name = 11007030,
+		},
+		["elefant_tank_destroyer_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_elefant_tank_destroyer",
+			screen_name = 11007744,
+		},
+		["elefant_tank_destroyer_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_elefant_tank_destroyer",
+			screen_name = 11007744,
+		},
+		["infantry_250_halftrack_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_250_halftrack",
+			screen_name = 11158954,
+		},
+		["mechanized_250_halftrack_grenadiers_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_250_halftrack",
+			screen_name = 11051325,
+		},
+		["mechanized_250_halftrack_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_250_halftrack",
+			screen_name = 11051325,
+		},
+		["mechanized_250_halftrack_tow"] = {
+			icon = "Icons_vehicles_vehicle_german_250_halftrack",
+			screen_name = 11051325,
+		},
+		["mortar_250_halftrack_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_251_mortar_halftrack",
+			screen_name = 11026002,
+		},
+		["mortar_250_halftrack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_251_mortar_halftrack",
+			screen_name = 11026002,
+		},
+		["sdkfz_221_light_at_halftrack"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["sdkfz_251_halftrack_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_251_halftrack",
+			screen_name = 11007036,
+		},
+		["sdkfz_251_halftrack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_251_halftrack",
+			screen_name = 11007036,
+		},
+		["howitzer_105mm_le_fh18_artillery"] = {
+			icon = "Icons_vehicles_vehicle_german_howitzer",
+			screen_name = 11031938,
+		},
+		["howitzer_105mm_le_fh18_artillery_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_howitzer",
+			screen_name = 11031938,
+		},
+		["opel_blitz_supply_squad"] = {
+			icon = "Icons_vehicles_cargo_truck",
+			screen_name = 11035438,
+		},
+		["ostwind_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_ostwind_flak_panzer",
+			screen_name = 11007743,
+		},
+		["ostwind_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_ostwind_flak_panzer",
+			screen_name = 11007743,
+		},
+		["panther_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_panther",
+			screen_name = 11007009,
+		},
+		["panther_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_panther",
+			screen_name = 11007009,
+		},
+		["panzer_mg_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_panzer_iv",
+			screen_name = 11054686,
+		},
+		["panzer_iv_ausf_j_ostheer_mp"] = {
+			icon = "Icons_abilities_panzer_iv_j_icon",
+			screen_name = 11051188,
+		},
+		["panzer_iv_command_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_panzer_iv_command_tank",
+			screen_name = 11038540,
+		},
+		["panzer_iv_command_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_panzer_iv_command_tank",
+			screen_name = 11035442,
+		},
+		["panzer_iv_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_panzer_iv",
+			screen_name = 11007029,
+		},
+		["panzer_iv_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_panzer_iv",
+			screen_name = 11007029,
+		},
+		["panzer_iv_stubby_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_panzer_iv_f1",
+			screen_name = 11048702,
+		},
+		["panzer_iv_stubby_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_panzer_iv_f1",
+			screen_name = 11048702,
+		},
+		["panzerwerfer_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_panzerwerfer",
+			screen_name = 11007751,
+		},
+		["panzerwerfer_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_panzerwerfer",
+			screen_name = 11007751,
+		},
+		["puma_east_german_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_puma_east",
+			screen_name = 11072073,
+		},
+		["scoutcar_sdkfz222"] = {
+			icon = "Icons_vehicles_vehicle_german_222_armored_car",
+			screen_name = 11008217,
+		},
+		["scoutcar_sdkfz222_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_222_armored_car",
+			screen_name = 11097449,
+		},
+		["stug_iii_e_commander_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_stug_iii_e",
+			screen_name = 11050474,
+		},
+		["stug_iii_e_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_stug_iii_e",
+			screen_name = 11024608,
+		},
+		["stug_iii_e_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_stug_iii_e",
+			screen_name = 11024608,
+		},
+		["stug_iii_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_stug_iii_g",
+			screen_name = 11007006,
+		},
+		["stug_iii_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_stug_iii_g",
+			screen_name = 11007006,
+		},
+		["cargo_plane"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["cargo_plane_fuel"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["cargo_plane_munitions"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["cargo_plane_supply_drop"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_air_cap_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_air_cap_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_air_superiority_recon_squad"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["stuka_ground_anti_tank_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_ground_anti_tank_squad_m06"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_ground_anti_tank_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_ground_anti_tank_squad_superiority"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_ground_attack_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_ground_attack_squad_m09"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_ground_attack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_ground_attack_squad_officer_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["stuka_ground_attack_squad_sector_assault_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["stuka_ground_attack_west_germans_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_ground_fragmentation_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_ground_fragmentation_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_incendiary_bomb_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_incendiary_bomb_victory_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_smoke_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_smoke_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["stuka_smoke_squad_officer_no_sight_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["tactical_bomber_heinkel_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["tactical_bombers"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["tactical_bombers_accurate"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["tiger_ace_squad_mp"] = {
+			icon = "Icons_commander_tiger_ace_call_in",
+			screen_name = 11054510,
+		},
+		["tiger_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_tiger",
+			screen_name = 2092402,
+		},
+		["tiger_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_tiger",
+			screen_name = 2092402,
+		},
+		["tiger_squad_sp_a2_m02"] = {
+			icon = "Icons_vehicles_vehicle_german_tiger",
+			screen_name = 11038501,
+		},
+		["tiger_squad_tow"] = {
+			icon = "Icons_vehicles_vehicle_german_tiger",
+			screen_name = 11051256,
+		},
+		["proxy_hmg_squad_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["proxy_mech_squad_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["proxy_riflemen_squad_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["proxy_sniper_squad_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["m01_conscript_squad_docks"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["m01_conscript_squad_harmless"] = {
+			icon = "Icons_units_unit_soviet_conscript_01",
+			screen_name = 11038472,
+		},
+		["m01_conscript_squad_harmless_durable"] = {
+			icon = "Icons_units_unit_soviet_conscript_01",
+			screen_name = 11038471,
+		},
+		["m01_conscript_squad_wounded"] = {
+			icon = "Icons_units_unit_soviet_conscript_01",
+			screen_name = 11038470,
+		},
+		["m01_il-2_sturmovik_rocket_squad"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["m01_il2_dogfight"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["m01_medic"] = {
+			icon = "Icons_units_unit_soviet_sniper",
+			screen_name = 11038482,
+		},
+		["m02_combat_engineer_squad"] = {
+			icon = "Icons_units_unit_soviet_engineer",
+			screen_name = 11006670,
+		},
+		["m02_refugee_squad"] = {
+			icon = "Icons_units_unit_soviet_conscript_01",
+			screen_name = 11038465,
+		},
+		["m08_combat_engineer_squad"] = {
+			icon = "Icons_units_unit_soviet_engineer",
+			screen_name = 11006670,
+		},
+		["m08_tank_buster_conscript_squad"] = {
+			icon = "Icons_units_unit_soviet_penal_battalion",
+			screen_name = 11046447,
+		},
+		["m11_partisan_squad_kar98k_rifle"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11037042,
+		},
+		["m11_partisan_squad_nagant_rifle"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_vehicle",
+			screen_name = 11037041,
+		},
+		["m11_partisan_squad_noweapon"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11037043,
+		},
+		["guards_troops_m08"] = {
+			icon = "Icons_units_unit_soviet_guards",
+			screen_name = 11038473,
+		},
+		["m11_ania_sniper_squad"] = {
+			icon = "Icons_units_unit_soviet_ania",
+			screen_name = 11032164,
+		},
+		["m11_isakovich_squad"] = {
+			icon = "Icons_units_unit_soviet_officer",
+			screen_name = 11032167,
+		},
+		["m11_sniper_team"] = {
+			icon = "Icons_units_unit_soviet_sniper",
+			screen_name = 11036854,
+		},
+		["shock_troops_m11"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["tow_cold_weather_guards_troops"] = {
+			icon = "Icons_units_unit_soviet_guards",
+			screen_name = 11035142,
+		},
+		["m08_t_34_76_squad_smallpath"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["us6_truck_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_su6_truck",
+			screen_name = 11032054,
+		},
+		["boat_01"] = {
+			icon = "",
+			screen_name = 11038737,
+		},
+		["steam_train"] = {
+			icon = "Icons_vehicles_vehicle_soviet_kv1_heavy_tank",
+			screen_name = 11038738,
+		},
+		["combat_engineer_squad"] = {
+			icon = "Icons_units_unit_soviet_engineer",
+			screen_name = 11006670,
+		},
+		["combat_engineer_squad_mp"] = {
+			icon = "Icons_units_unit_soviet_engineer",
+			screen_name = 11006670,
+		},
+		["base_conscript_squad"] = {
+			icon = "Icons_units_unit_soviet_conscript_02",
+			screen_name = 11048713,
+		},
+		["base_conscript_squad_mp"] = {
+			icon = "Icons_units_unit_soviet_conscript_01",
+			screen_name = 11006679,
+		},
+		["conscript_squad"] = {
+			icon = "Icons_units_unit_soviet_conscript_03",
+			screen_name = 11006679,
+		},
+		["conscript_squad_mp"] = {
+			icon = "Icons_units_unit_soviet_conscript_03",
+			screen_name = 11006679,
+		},
+		["conscript_squad_tutorial"] = {
+			icon = "Icons_units_unit_soviet_conscript_03",
+			screen_name = 11006679,
+		},
+		["dshk_38_hmg_squad"] = {
+			icon = "Icons_commander_dshk_icon",
+			screen_name = 11048769,
+		},
+		["dshk_38_hmg_squad_mp"] = {
+			icon = "Icons_commander_dshk_icon",
+			screen_name = 11048767,
+		},
+		["m1910_maxim_heavy_machine_gun_squad"] = {
+			icon = "Icons_units_unit_soviet_mg",
+			screen_name = 11048749,
+		},
+		["m1910_maxim_heavy_machine_gun_squad_mp"] = {
+			icon = "Icons_units_unit_soviet_mg",
+			screen_name = 11048771,
+		},
+		["hm-120_38_mortar_squad"] = {
+			icon = "Icons_units_unit_soviet_mortar",
+			screen_name = 11006676,
+		},
+		["hm-120_38_mortar_squad_mp"] = {
+			icon = "Icons_units_unit_soviet_mortar",
+			screen_name = 11006676,
+		},
+		["pm-82_41_mortar_squad"] = {
+			icon = "Icons_units_unit_soviet_mortar",
+			screen_name = 11006677,
+		},
+		["pm-82_41_mortar_squad_mp"] = {
+			icon = "Icons_units_unit_soviet_mortar",
+			screen_name = 11006677,
+		},
+		["partisans_lmg_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11052767,
+		},
+		["partisans_panzerschreck_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_vehicle",
+			screen_name = 11052781,
+		},
+		["partisans_ptrs_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_vehicle",
+			screen_name = 11052784,
+		},
+		["partisans_rifle_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11052775,
+		},
+		["partisans_smg_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11052757,
+		},
+		["partisans_squad_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11052757,
+		},
+		["partisan_squad_granatewerfer_34_81mm_mortar"] = {
+			icon = "Icons_units_unit_soviet_mortar",
+			screen_name = 11035277,
+		},
+		["partisan_squad_granatewerfer_34_81mm_mortar_mp"] = {
+			icon = "Icons_units_unit_soviet_mortar",
+			screen_name = 11035276,
+		},
+		["partisan_squad_kar98k_rifle"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11032174,
+		},
+		["partisan_squad_kar98k_rifle_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11032174,
+		},
+		["partisan_squad_maxim_hmg"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11032187,
+		},
+		["partisan_squad_maxim_hmg_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11032187,
+		},
+		["partisan_squad_mg42_hmg"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11035279,
+		},
+		["partisan_squad_mg42_hmg_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11035278,
+		},
+		["partisan_squad_nagant_rifle"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11008210,
+		},
+		["partisan_squad_nagant_rifle_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11008210,
+		},
+		["partisan_squad_pm-82_41_mortar"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11035281,
+		},
+		["partisan_squad_pm-82_41_mortar_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11035280,
+		},
+		["tow_bridge_partisan_squad_at"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_vehicle",
+			screen_name = 11054489,
+		},
+		["tow_bridge_partisan_squad_base"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11054513,
+		},
+		["tow_bridge_partisan_squad_maxim"] = {
+			icon = "Icons_units_unit_soviet_partisan_mg",
+			screen_name = 11054493,
+		},
+		["tow_bridge_partisan_squad_mortar"] = {
+			icon = "Icons_units_unit_soviet_partisan_mortar",
+			screen_name = 11054496,
+		},
+		["tow_partisan_squad_kar98k_rifle_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11048817,
+		},
+		["tow_partisan_squad_lmg_squad"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11048814,
+		},
+		["tow_partisan_squad_maxim_hmg_mp"] = {
+			icon = "Icons_units_unit_soviet_partisan_anti_infantry",
+			screen_name = 11048813,
+		},
+		["sniper_team"] = {
+			icon = "Icons_units_unit_soviet_sniper",
+			screen_name = 11007414,
+		},
+		["sniper_team_male"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["sniper_team_mp"] = {
+			icon = "Icons_units_unit_soviet_sniper",
+			screen_name = 11007414,
+		},
+		["commissar_227"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["commissar_commander_squad_mp"] = {
+			icon = "Icons_units_unit_soviet_officer",
+			screen_name = 11157802,
+		},
+		["commissar_squad_battle"] = {
+			icon = "Icons_units_unit_soviet_officer",
+			screen_name = 11051610,
+		},
+		["commissar_squad_mp"] = {
+			icon = "Icons_units_unit_soviet_officer",
+			screen_name = 11051610,
+		},
+		["commissar_squad_tow"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["soviet_officer_squad"] = {
+			icon = "Icons_units_unit_soviet_officer",
+			screen_name = 11032057,
+		},
+		["soviet_officer_squad_mp"] = {
+			icon = "Icons_units_unit_soviet_officer",
+			screen_name = 11032057,
+		},
+		["guards_airbourne_mp"] = {
+			icon = "Icons_commander_airborne_guards_icon_new",
+			screen_name = 11166400,
+		},
+		["guards_troops"] = {
+			icon = "Icons_units_unit_soviet_guards",
+			screen_name = 11007197,
+		},
+		["guards_troops_assault_mp"] = {
+			icon = "Icons_units_unit_soviet_assault_infantry",
+			screen_name = 11203816,
+		},
+		["guards_troops_mp"] = {
+			icon = "Icons_units_unit_soviet_guards",
+			screen_name = 11007197,
+		},
+		["penal_battalion"] = {
+			icon = "Icons_units_unit_soviet_penal_battalion",
+			screen_name = 11007195,
+		},
+		["penal_battalion_mp"] = {
+			icon = "Icons_units_unit_soviet_penal_battalion",
+			screen_name = 11007195,
+		},
+		["shock_troops"] = {
+			icon = "Icons_units_unit_soviet_shock",
+			screen_name = 11046468,
+		},
+		["shock_troops_mp"] = {
+			icon = "Icons_units_unit_soviet_shock",
+			screen_name = 11046467,
+		},
+		["m2hb_50cal_hmg_soviet_squad_mp"] = {
+			icon = "Icons_units_unit_aef_hmg_m2hb",
+			screen_name = 11051145,
+		},
+		["cargo_plane_airbourne"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["cargo_plane_supply_drop_soviet_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["il-2_stumovik_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038436,
+		},
+		["il-2_stumovik_squad_advanced_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038437,
+		},
+		["il-2_stumovik_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038437,
+		},
+		["il-2_stumovik_squad_rocket_strafe_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038437,
+		},
+		["il-2_stumovik_strafing_run_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038437,
+		},
+		["il-2_sturmovik_anti_tank_bomb_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038437,
+		},
+		["il-2_sturmovik_mark_vehicle_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038438,
+		},
+		["il-2_sturmovik_recon_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038439,
+		},
+		["il-2_sturmovik_recon_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038440,
+		},
+		["il-2_sturmovik_recon_squad_sp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038439,
+		},
+		["il-2_sturmovik_rocket_sp_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038441,
+		},
+		["il-2_sturmovik_rocket_sp_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038442,
+		},
+		["il-2_sturmovik_rocket_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038443,
+		},
+		["il-2_sturmovik_rocket_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_il2",
+			screen_name = 11038444,
+		},
+		["is-2"] = {
+			icon = "Icons_vehicles_vehicle_soviet_is2",
+			screen_name = 11006769,
+		},
+		["is-2_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_is2",
+			screen_name = 11006769,
+		},
+		["is-2_tow"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["isu-152"] = {
+			icon = "Icons_vehicles_vehicle_soviet_isu152",
+			screen_name = 11006770,
+		},
+		["isu-152_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_isu152",
+			screen_name = 11006770,
+		},
+		["katyusha_bm-13n_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_katyush_rocket_truck",
+			screen_name = 11007512,
+		},
+		["katyusha_bm-13n_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_katyush_rocket_truck",
+			screen_name = 11007512,
+		},
+		["kv-1"] = {
+			icon = "Icons_vehicles_vehicle_soviet_kv1_heavy_tank",
+			screen_name = 11007079,
+		},
+		["kv-1_commander_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_kv1_heavy_tank",
+			screen_name = 11052351,
+		},
+		["kv-1_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_kv1_heavy_tank",
+			screen_name = 11007079,
+		},
+		["kv-1_sp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_kv1_heavy_tank",
+			screen_name = 11015628,
+		},
+		["kv-2"] = {
+			icon = "Icons_vehicles_vehicle_soviet_kv2_heavy_tank",
+			screen_name = 11052241,
+		},
+		["kv-2_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_kv2_heavy_tank",
+			screen_name = 11052242,
+		},
+		["kv-2_tow"] = {
+			icon = "Icons_vehicles_vehicle_soviet_kv2_heavy_tank",
+			screen_name = 11052243,
+		},
+		["kv-2_tow_battle"] = {
+			icon = "Icons_vehicles_vehicle_soviet_kv2_heavy_tank",
+			screen_name = 11052242,
+		},
+		["kv-8"] = {
+			icon = "Icons_vehicles_vehicle_soviet_kv8",
+			screen_name = 11038378,
+		},
+		["kv-8_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_kv8",
+			screen_name = 11035124,
+		},
+		["m1931_203mm_b-4_howitzer_artillery"] = {
+			icon = "Icons_vehicles_vehicle_soviet_b4_artillery_gun",
+			screen_name = 11043313,
+		},
+		["m1931_203mm_b-4_howitzer_artillery_commander_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_b4_artillery_gun",
+			screen_name = 11051228,
+		},
+		["m1931_203mm_b-4_howitzer_artillery_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_b4_artillery_gun",
+			screen_name = 11038377,
+		},
+		["m1937_152mm_ml_20_artillery"] = {
+			icon = "Icons_vehicles_vehicle_soviet_ml20_artillery_gun",
+			screen_name = 11006980,
+		},
+		["m1937_152mm_ml_20_artillery_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_ml20_artillery_gun",
+			screen_name = 11006980,
+		},
+		["m3a1_scout_car_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_m3a1_armored_personnel_carrier",
+			screen_name = 11007084,
+		},
+		["m3a1_scout_car_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_m3a1_armored_personnel_carrier",
+			screen_name = 11007084,
+		},
+		["m5_halftrack__assault_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_m5_halftrack",
+			screen_name = 11072151,
+		},
+		["m5_halftrack_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_m5_halftrack",
+			screen_name = 11007075,
+		},
+		["m5_halftrack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_m5_halftrack",
+			screen_name = 11007075,
+		},
+		["airbourne_plane_paras"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["dshk_plane_hmg"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["plane_weapon_drop"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["cargo_plane_soviet"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["soviet_allied_cargo_plane"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["soviet_76mm_sherman_mp"] = {
+			icon = "Icons_vehicles_vehicle_aef_m4a3_sherman_76mm",
+			screen_name = 11072112,
+		},
+		["m1937_53-k_45mm_at_gun_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_m1942_at_gun",
+			screen_name = 11006681,
+		},
+		["m1937_53-k_45mm_at_gun_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_m1942_at_gun",
+			screen_name = 11006681,
+		},
+		["m1942_zis-3_76mm_at_gun_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_m1942_76mm_at_gun",
+			screen_name = 11006973,
+		},
+		["m1942_zis-3_76mm_at_gun_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_m1942_76mm_at_gun",
+			screen_name = 11006973,
+		},
+		["su-76m"] = {
+			icon = "Icons_vehicles_vehicle_soviet_su76m_assault_gun",
+			screen_name = 11007080,
+		},
+		["su-76m_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_su76m_assault_gun",
+			screen_name = 11007080,
+		},
+		["su-76m_tow"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["su-85"] = {
+			icon = "Icons_vehicles_vehicle_soviet_su85_tank_destroyer",
+			screen_name = 11006721,
+		},
+		["su-85_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_su85_tank_destroyer",
+			screen_name = 11006721,
+		},
+		["t-70m"] = {
+			icon = "Icons_vehicles_vehicle_soviet_t70m_light_tank",
+			screen_name = 11006768,
+		},
+		["t-70m_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_t70m_light_tank",
+			screen_name = 11006768,
+		},
+		["t_34_76_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_t34_76_heavy_tank",
+			screen_name = 11006678,
+		},
+		["t_34_76_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_t34_76_heavy_tank",
+			screen_name = 11006678,
+		},
+		["t_34_85_advanced_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_t34_85",
+			screen_name = 11053999,
+		},
+		["t_34_85_squad"] = {
+			icon = "Icons_vehicles_vehicle_soviet_t34_76_heavy_tank",
+			screen_name = 11007408,
+		},
+		["t_34_85_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_t34_85",
+			screen_name = 11048080,
+		},
+		["zis_6_transport_truck"] = {
+			icon = "Icons_vehicles_vehicle_soviet_su6_truck",
+			screen_name = 11048645,
+		},
+		["zis_6_transport_truck_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_su6_truck",
+			screen_name = 11048638,
+		},
+		["zis_6_supply_truck_mp"] = {
+			icon = "Icons_vehicles_vehicle_soviet_su6_truck",
+			screen_name = 11203838,
+		},
+		["howitzer_105mm_le_fh18_artillery_minichallenge"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["howitzer_105mm_long_range"] = {
+			icon = "Icons_vehicles_vehicle_german_howitzer",
+			screen_name = 11031938,
+		},
+		["scoutcar_223_squad"] = {
+			icon = "Icons_vehicles_vehicle_german_222_armored_car",
+			screen_name = 11079545,
+		},
+		["assault_pioneer_squad_mp"] = {
+			icon = "Icons_units_unit_west_german_sturmpioneers",
+			screen_name = 11051162,
+		},
+		["fallschirmjager_squad_mp"] = {
+			icon = "Icons_units_unit_west_german_fallschirmjager",
+			screen_name = 11051163,
+		},
+		["field_officer_squad_mp"] = {
+			icon = "",
+			screen_name = 11051164,
+		},
+		["terror_officer_squad_mp"] = {
+			icon = "Icons_units_unit_west_german_terror_officer",
+			screen_name = 11065351,
+		},
+		["jaeger_light_infantry_recon_squad_mp"] = {
+			icon = "Icons_units_unit_west_german_jaegar",
+			screen_name = 11072311,
+		},
+		["obersoldaten_squad_mp"] = {
+			icon = "Icons_units_unit_west_german_waffen_honor_guard",
+			screen_name = 11051169,
+		},
+		["panzerfusilier_squad_mp"] = {
+			icon = "Icons_units_unit_west_german_panzerfusilier",
+			screen_name = 11051451,
+		},
+		["urban_assault_light_infantry"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["volksgrenadier_squad_mp"] = {
+			icon = "Icons_units_unit_west_german_volksgrenadiers",
+			screen_name = 11051170,
+		},
+		["pak40_75mm_at_gun_squad_wg_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_pak_40_75mm_at_gun",
+			screen_name = 11051171,
+		},
+		["raketenwerfer43_88mm_puppchen_antitank_gun_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_raketenwerfer_43_at_gun",
+			screen_name = 11052792,
+		},
+		["flak_emplacement"] = {
+			icon = "Icons_buildings_building_west_german_flak_emplacement",
+			screen_name = 11066135,
+		},
+		["flak_emplacement_base"] = {
+			icon = "Icons_buildings_building_west_german_flak_emplacement",
+			screen_name = 11073989,
+		},
+		["grw34_81mm_mortar_squad_mp"] = {
+			icon = "Icons_units_unit_german_granatwerfer_34_mortar",
+			screen_name = 11051167,
+		},
+		["le_ig_18_inf_support_gun_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_ig18_infantry_support_gun",
+			screen_name = 11051477,
+		},
+		["mg34_heavy_machine_gun_squad_mp"] = {
+			icon = "Icons_units_unit_west_german_hmg_crew",
+			screen_name = 11066582,
+		},
+		["mg42_heavy_machine_gun_squad_wg_mp"] = {
+			icon = "Icons_units_unit_german_m1910_hmg",
+			screen_name = 11115860,
+		},
+		["pak43_88mm_at_gun_squad_westgerman_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_pak_43_at_gun",
+			screen_name = 11072398,
+		},
+		["goliath_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_goliath",
+			screen_name = 11084288,
+		},
+		["mortar_250_halftrack_squad_westgerman_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_251_mortar_halftrack",
+			screen_name = 11072441,
+		},
+		["sdkfz_251_17_flak_halftrack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_halftrack_251_flak",
+			screen_name = 11051175,
+		},
+		["sdkfz_251_20_ir_searchlight_halftrack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_halftrack_251_infrared",
+			screen_name = 11051177,
+		},
+		["sdkfz_251_20_ir_searchlight_halftrack_squad_sp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_halftrack_251_infrared",
+			screen_name = 11071247,
+		},
+		["sdkfz_251_halftrack_squad_mp_2"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["sdkfz_251_wurfrahmen_40_halftrack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_halftrack_251_walking_stuka",
+			screen_name = 11051180,
+		},
+		["hetzer_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_hetzer",
+			screen_name = 11097431,
+		},
+		["okw_howitzer_105mm_le_fh18_artillery_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_howitzer",
+			screen_name = 11031938,
+		},
+		["jagdpanzer_tank_destroyer_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_jagdpanzer",
+			screen_name = 11051182,
+		},
+		["jagdtiger_td_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_jagdtiger",
+			screen_name = 11053325,
+		},
+		["command_king_tiger_squad_mp"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["king_tiger_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_king_tiger",
+			screen_name = 11051183,
+		},
+		["kubelwagen_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_kubelwagen",
+			screen_name = 11051184,
+		},
+		["opel_blitz_squad_mp"] = {
+			icon = "Icons_vehicles_opel_blitz_okw",
+			screen_name = 11035438,
+		},
+		["ostwind_squad_westgerman_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_ostwind_flak_panzer",
+			screen_name = 11072328,
+		},
+		["panther_ausf_g_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_panther",
+			screen_name = 11051186,
+		},
+		["panther_commander_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_panther_command_tank",
+			screen_name = 11053827,
+		},
+		["panzer_ii_luchs_squad_dummy_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_panzer_ii_luchs",
+			screen_name = 11051187,
+		},
+		["panzer_ii_luchs_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_panzer_ii_luchs",
+			screen_name = 11051187,
+		},
+		["panzer_iv_ausf_j_battle_group_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_panzer_iv",
+			screen_name = 11051188,
+		},
+		["ju52_paratrooper_plane"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11038499,
+		},
+		["ju52_plane"] = {
+			icon = "",
+			screen_name = 0,
+		},
+		["armored_car_sdkfz_234_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_234_puma_armored_car",
+			screen_name = 11051445,
+		},
+		["scout_car_sdkfz221_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_scout_car_221",
+			screen_name = 11158017,
+		},
+		["tactical_bombers_sector_assault"] = {
+			icon = "Icons_vehicles_vehicle_german_stuka",
+			screen_name = 11158091,
+		},
+		["sturmtiger_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_sturmtiger",
+			screen_name = 11051191,
+		},
+		["sws_halftrack_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_halftrack_sws",
+			screen_name = 11051179,
+		},
+		["sws_halftrack_squad_sp"] = {
+			icon = "Icons_vehicles_vehicle_west_german_halftrack_sws",
+			screen_name = 11071229,
+		},
+		["west_german_tiger_squad_mp"] = {
+			icon = "Icons_vehicles_vehicle_german_tiger",
+			screen_name = 11167487,
+		},
+	}
+}

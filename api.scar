@@ -1,0 +1,55 @@
+
+function ReplayEnhancements_Init()
+    
+    Rule_AddGlobalEvent(ReplayEnhancements_OnSquadKilled, GE_SquadKilled)
+end
+
+ReplayEnhancements = {
+    EventQueueClickCallbackPositions = {},
+}
+
+---@param squad Squad
+function ReplayEnhancements_OnSquadKilled(squad)
+    local position = Squad_GetPosition(squad)
+    local squadData = ReplayEnhancementsData.sbps[BP_GetName(Squad_GetBlueprint(squad))] or {}
+    local name = "Unknown"
+    local icon = squadData.icon or ""
+    if squadData.screen_name and squadData.screen_name ~= 0 then
+        name = Util_CreateLocString(Loc_ToAnsi(squadData.screen_name))
+    end
+    local title = Loc_FormatText1(2158658, name)
+
+    local hintpoint_id = HintPoint_Add(
+        position,
+        true,
+        title,
+        5,
+        HPAT_Hint,
+        icon
+    )
+
+    local event_id = UI_CreateEventCueClickable(
+        icon,
+        "",
+        title,
+        LOC(""),
+        ReplayEnhancements_EventQueueClickCallback,
+        30,
+        true
+    )
+    ReplayEnhancements.EventQueueClickCallbackPositions[event_id] = position
+end
+
+function ReplayEnhancements_EventQueueClickCallback(id)
+    if scartype(ReplayEnhancements.EventQueueClickCallbackPositions[id]) == ST_SCARPOS then
+        Camera_MoveTo(ReplayEnhancements.EventQueueClickCallbackPositions[id])
+    end
+end
+
+function Util_CreateLocString(text)
+	local tmpstr = LOC(text)
+	tmpstr[1] = text
+	return tmpstr
+end
+
+ReplayEnhancements_Init()
