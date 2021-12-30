@@ -8,11 +8,13 @@
 
 # Usage
 1. Download the [latest release](https://github.com/Janne252/coh2-replay-enhancements/releases) and extract its contents to CoH2's install directory, creating the directory path `<..>\steamapps\common\Company of Heroes 2\replay-enhancements\`
-- Add `-dev` to CoH2's launch options
-- Load up a replay
-- Pause the game
-- Open the in-game console by pressing `Ctrl+Shift+~` or `Ctrl+Shift+Ö` depending on your keyboard layout
-- Paste in `dofile("replay-enhancements\\init.scar")` and press enter
+    - This directory should contain all the `.scar` files
+1. Add `-dev` to CoH2's launch options
+1. Load up a replay
+1. Pause the game
+1. Open the in-game console by pressing `Ctrl+Shift+~` or `Ctrl+Shift+Ö` depending on your keyboard layout
+1. Paste in `dofile("replay-enhancements\\init.scar")` and press enter
+1. Unpause the game
 
 # Planned features
 - [ ] Detect team weapon abandons and indicate as _decrewed_ instead of _killed_
