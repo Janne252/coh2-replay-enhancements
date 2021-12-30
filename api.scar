@@ -28,8 +28,9 @@ function ReplayEnhancements_OnSquadKilled(squad)
     local id = Squad_GetGameID(squad)
     local position = Squad_GetPosition(squad)
     local squadData = ReplayEnhancementsData.sbps[BP_GetName(Squad_GetBlueprint(squad))] or {}
-    local name = "Unknown"
-    local icon = squadData.icon or ""
+    -- Default name based on the sbp
+    local name = Util_CreateLocString(BP_GetName(Squad_GetBlueprint(squad)))
+    local icon = squadData.icon or "Icons_taskbar_hq_dead"
     if squadData.screen_name and squadData.screen_name ~= 0 then
         -- Pass as $1234 to the loc formatter
         name = string.format("$%s", squadData.screen_name)
