@@ -11,6 +11,7 @@
     - This directory should contain all the `.scar` files
 1. Download [wipes.rec](https://github.com/Janne252/coh2-replay-enhancements/raw/master/examples/wipes.rec) replay file to `\Documents\My Games\Company of Heroes 2\playback`
     - This is a short replay file intended for testing and should be used on the first time and after updates
+    - The replay requires the [CheatCommands Mod II](https://steamcommunity.com/sharedfiles/filedetails/?id=692412438) mod to be installed
 1. Add `-dev` to CoH2's launch options
 1. Load up a replay
 1. Pause the game
