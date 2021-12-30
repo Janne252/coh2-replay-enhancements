@@ -9,6 +9,8 @@
 # Usage
 1. Download `replay-enhancements.zip` of the [latest release](https://github.com/Janne252/coh2-replay-enhancements/releases) and extract its contents to CoH2's install directory, creating the directory path `<..>\steamapps\common\Company of Heroes 2\replay-enhancements\`
     - This directory should contain all the `.scar` files
+1. Download [wipes.rec](examples/wipes.rec) replay file to `\Documents\My Games\Company of Heroes 2\playback`
+    - This is a short replay file intended for testing
 1. Add `-dev` to CoH2's launch options
 1. Load up a replay
 1. Pause the game
