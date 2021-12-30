@@ -1,49 +1,98 @@
 
 function ReplayEnhancements_Init()
-    
+    Rule_Add(ReplayEnhancements_IndicatorManager)
     Rule_AddGlobalEvent(ReplayEnhancements_OnSquadKilled, GE_SquadKilled)
 end
 
+---@class SquadDeathIndicator
+---@field position ScarPosition
+---@field display_ticks integer
+---@field hintpoint_id integer
+---@field event_id integer
+---@field map_icon_id integer
+
 ReplayEnhancements = {
+    ---@type SquadDeathIndicator[]
+    SquadDeathIndicators = {},
     EventQueueClickCallbackPositions = {},
+    IndicatorDisplaySeconds = 60,
 }
 
 ---@param squad Squad
 function ReplayEnhancements_OnSquadKilled(squad)
+    local owner = "world"
+    if not World_OwnsSquad(squad) then
+        owner = Loc_ToAnsi(Player_GetDisplayName(Squad_GetPlayerOwner(squad)))
+    end
+
+    local id = Squad_GetGameID(squad)
     local position = Squad_GetPosition(squad)
     local squadData = ReplayEnhancementsData.sbps[BP_GetName(Squad_GetBlueprint(squad))] or {}
     local name = "Unknown"
     local icon = squadData.icon or ""
     if squadData.screen_name and squadData.screen_name ~= 0 then
-        name = Util_CreateLocString(Loc_ToAnsi(squadData.screen_name))
+        -- Pass as $1234 to the loc formatter
+        name = string.format("$%s", squadData.screen_name)
     end
     local title = Loc_FormatText1(2158658, name)
+    title = Loc_ToAnsi(title)
+    title = Util_CreateLocString(string.format("%s\n%s", owner, title))
 
-    local hintpoint_id = HintPoint_Add(
-        position,
-        true,
-        title,
-        5,
-        HPAT_Hint,
-        icon
-    )
+    local hintpoint_id = HintPoint_Add(position, true, title, 0, HPAT_Artillery, icon)
+    local event_id = UI_CreateEventCueClickable(icon, "", title, LOC(""), ReplayEnhancements_EventQueueClickCallback, 30, true)
+    local map_icon_id = MapIcon_CreatePosition(position,"Icons_taskbar_hq_dead", 24, 255, 0, 0, 255)
+    UI_CreateMinimapBlip(position, ReplayEnhancements.IndicatorDisplaySeconds, BT_Reveal)
 
-    local event_id = UI_CreateEventCueClickable(
-        icon,
-        "",
-        title,
-        LOC(""),
-        ReplayEnhancements_EventQueueClickCallback,
-        30,
-        true
-    )
+    table.insert(ReplayEnhancements.SquadDeathIndicators, {
+        display_ticks = ReplayEnhancements.IndicatorDisplaySeconds * 8,
+        position = position,
+        hintpoint_id = hintpoint_id,
+        event_id = event_id,
+        map_icon_id = map_icon_id,
+    })
     ReplayEnhancements.EventQueueClickCallbackPositions[event_id] = position
+end
+
+function ReplayEnhancements_RemoveClosestDeathIndicator()
+    local position = Camera_GetCurrentTargetPos()
+    local closest_index = nil
+    local closest_distance = nil
+    for i = #ReplayEnhancements.SquadDeathIndicators, 1, -1 do
+        local item = ReplayEnhancements.SquadDeathIndicators[i]
+        local distance = World_DistancePointToPoint(position, item.position)
+        if closest_distance == nil or closest_distance > distance then
+            closest_index = i
+            closest_distance = distance
+        end
+    end
+
+    if closest_index ~= nil then
+        ReplayEnhancements_RemoveDeathIndicator(closest_index)
+    end
 end
 
 function ReplayEnhancements_EventQueueClickCallback(id)
     if scartype(ReplayEnhancements.EventQueueClickCallbackPositions[id]) == ST_SCARPOS then
         Camera_MoveTo(ReplayEnhancements.EventQueueClickCallbackPositions[id])
     end
+end
+
+function ReplayEnhancements_IndicatorManager()
+    for i = #ReplayEnhancements.SquadDeathIndicators, 1, -1 do
+        local item = ReplayEnhancements.SquadDeathIndicators[i]
+        item.display_ticks = item.display_ticks - 1
+
+        if item.display_ticks <= 0 then
+            ReplayEnhancements_RemoveDeathIndicator(i)
+        end
+    end
+end
+
+function ReplayEnhancements_RemoveDeathIndicator(index)
+    local item = ReplayEnhancements.SquadDeathIndicators[index]
+    HintPoint_Remove(item.hintpoint_id)
+    MapIcon_Destroy(item.map_icon_id)
+    table.remove(ReplayEnhancements.SquadDeathIndicators, index)
 end
 
 function Util_CreateLocString(text)
