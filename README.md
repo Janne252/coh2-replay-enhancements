@@ -17,6 +17,7 @@
 1. Pause the game
 1. Open the in-game console by pressing `Ctrl+Shift+~` or `Ctrl+Shift+Ö` depending on your keyboard layout
 1. Paste in `dofile("replay-enhancements\\init.scar")` and press enter
+1. Close the in-game console (same hotkey as the one used to open the in-game console)
 1. Unpause the game
 
 # Planned features
