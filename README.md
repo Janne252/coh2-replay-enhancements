@@ -17,3 +17,6 @@
 # Planned features
 - [ ] Detect team weapon abandons and indicate as _decrewed_ instead of _killed_
 - [ ] Ignore retreating abandoned team weapon team member deaths
+
+# License
+- See [LICENSE.txt](LICENSE.txt)
