@@ -1,10 +1,12 @@
 # Features
 ![](screenshots/example-01.png)
 - All events of an entire squad dying are indicated with in-game UI elements
-- Death event indicators are displayed for 60 seconds 
-- Any death event indicator can be removed by pressing `Ctrl+D` (likely not the final hotkey, can be easily changed)
-    - Selection of which death event indicator is removed is based on distance to the current camera position
-    - Selection may be based on mouse position instead in the future to allow more accurate control
+    - Death events appear in the event queue andand clicking the event moves the camera to the event location
+    - Death event indicators are displayed for 60 seconds 
+        - Indicator consists of a minimap/tactical map icon (red ☠️) and an in-game marker with player name, unit icon, and unit name
+    - Any death event indicator can be removed by pressing `Ctrl+D` (likely not the final hotkey, can be easily changed)
+        - Selection of which death event indicator is removed is based on distance to the current camera position
+        - Selection may be based on mouse position instead in the future to allow more accurate control
 
 # Usage
 1. Download `replay-enhancements.zip` of the [latest release](https://github.com/Janne252/coh2-replay-enhancements/releases) and extract its contents to CoH2's install directory, creating the directory path `<..>\steamapps\common\Company of Heroes 2\replay-enhancements\`
@@ -23,6 +25,7 @@
 # Planned features
 - [ ] Detect team weapon abandons and indicate as _decrewed_ instead of _killed_
 - [ ] Ignore retreating abandoned team weapon team member deaths
+- [ ] (Experimental) Use the threat arrow system to display arrows towards death event locations
 
 # License
 - See [LICENSE.txt](LICENSE.txt)
