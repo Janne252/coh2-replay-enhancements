@@ -187,6 +187,7 @@ function ReplayEnhancements_RemoveDeathIndicator(index)
     MapIcon_Destroy(item.map_icon_id)
     table.remove(ReplayEnhancements.SquadDeathIndicators, index)
     ThreatArrow_Remove(item.threat_group_id, item.position)
+    ThreatGroup_Destroy(item.threat_group_id)
 end
 
 ReplayEnhancements_Init()
