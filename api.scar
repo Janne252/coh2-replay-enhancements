@@ -1,7 +1,9 @@
 
 function ReplayEnhancements_Init()
     Rule_Add(ReplayEnhancements_IndicatorManager)
+    Rule_Add(ReplayEnhancements_UpdateSquadInfo)
     Rule_AddGlobalEvent(ReplayEnhancements_OnSquadKilled, GE_SquadKilled)
+    Rule_AddGlobalEvent(ReplayEnhancements_OnEntityAbandoned, GE_EntityAbandoned)
 end
 
 ---@class SquadDeathIndicator
@@ -10,46 +12,136 @@ end
 ---@field hintpoint_id integer
 ---@field event_id integer
 ---@field map_icon_id integer
+---@field dr_frame string
+---@field threat_group_id integer
+
+---@class SquadDeathEventType
+---@field label integer
+
+---@class SquadInfo
+---@field is_aircraft boolean
 
 ReplayEnhancements = {
     ---@type SquadDeathIndicator[]
     SquadDeathIndicators = {},
     EventQueueClickCallbackPositions = {},
     IndicatorDisplaySeconds = 60,
+    AbandonedSquads = {},
+    DeathEventType = {
+        ---@type SquadDeathEventType
+        Abandoned = {
+            label = 11008113, -- Abandoned
+        },
+        ---@type SquadDeathEventType
+        Killed = {
+            label = 710029, -- Killed
+        },
+    },
+    ---@type SquadInfo
+    Squads = {},
 }
 
+---@param entity Entity
+function ReplayEnhancements_OnEntityAbandoned(entity, causer)
+    local squad = Entity_GetSquad(entity)
+    local position = Entity_GetPosition(entity)
+
+    if squad ~= nil then
+        ReplayEnhancements_TryRegisterDeathEvent(squad, causer, ReplayEnhancements.DeathEventType.Abandoned)
+        ReplayEnhancements.AbandonedSquads[Squad_GetGameID(squad)] = true
+    end
+end
+
 ---@param squad Squad
-function ReplayEnhancements_OnSquadKilled(squad)
-    local owner = "world"
+function ReplayEnhancements_OnSquadKilled(squad, causer)
+    ReplayEnhancements_TryRegisterDeathEvent(squad, causer, ReplayEnhancements.DeathEventType.Killed)
+end
+
+function ReplayEnhancements_UpdateSquadInfo()
+    -- Collect data from squads that cannot be obtained once they're dead
+    for i = 1, World_GetPlayerCount() do
+        local player = World_GetPlayerAt(i)
+        local sg_squads = Player_GetSquads(player)
+        SGroup_ForEach(sg_squads, function(_, _, squad)
+            local squad_id = Squad_GetGameID(squad)
+            if ReplayEnhancements.Squads[squad_id] == nil then
+                ReplayEnhancements.Squads[squad_id] = {
+                    is_aircraft = Squad_IsAnyEntityOfType(squad, {"aircraft"})
+                }
+            end
+        end)
+    end
+end
+
+---@param squad Squad
+---@param causer Squad | Entity | nil
+---@param event SquadDeathEventType
+function ReplayEnhancements_TryRegisterDeathEvent(squad, causer, event)
+    local id = Squad_GetGameID(squad)
+    
+    -- Ignore all airplanes
+    if ReplayEnhancements.Squads[id] and ReplayEnhancements.Squads[id].is_aircraft then
+        return
+    end
+
+    -- Ignore abandoned squads; There are captured via ReplayEnhancements_OnEntityAbandoned
+    if ReplayEnhancements.AbandonedSquads[id] == true then
+        return
+    end
+
+    local owner = Squad_GetPlayerOwnerDisplayName(squad)
+    local causer_owner = "N/A"
+    
     if not World_OwnsSquad(squad) then
         owner = Loc_ToAnsi(Player_GetDisplayName(Squad_GetPlayerOwner(squad)))
     end
 
-    local id = Squad_GetGameID(squad)
     local position = Squad_GetPosition(squad)
     local squadData = ReplayEnhancementsData.sbps[BP_GetName(Squad_GetBlueprint(squad))] or {}
     -- Default name based on the sbp
-    local name = Util_CreateLocString(BP_GetName(Squad_GetBlueprint(squad)))
+    local squad_name = Squad_ResolveDisplayName(squad)
+    local causer_name = ""
     local icon = squadData.icon or "Icons_taskbar_hq_dead"
-    if squadData.screen_name and squadData.screen_name ~= 0 then
-        -- Pass as $1234 to the loc formatter
-        name = string.format("$%s", squadData.screen_name)
-    end
-    local title = Loc_FormatText1(2158658, name)
-    title = Loc_ToAnsi(title)
-    title = Util_CreateLocString(string.format("%s\n%s", owner, title))
 
-    local hintpoint_id = HintPoint_Add(position, true, title, 0, HPAT_Artillery, icon)
+    if scartype(causer) == ST_SQUAD then
+        causer_name = Squad_ResolveDisplayName(causer)
+        causer_owner = Squad_GetPlayerOwnerDisplayName(causer)
+    elseif scartype(causer) == ST_ENTITY then
+        causer_name = Entity_ResolveDisplayName(causer)
+        causer_owner = Entity_GetPlayerOwnerDisplayName(causer)
+    end
+    local display_ticks = ReplayEnhancements.IndicatorDisplaySeconds * 8
+
+    local title = Util_CreateLocString(string.format("%s\n%s", 
+        owner, 
+        squad_name
+        --  Killed/Abandoned is not displayed; likely not relevant
+        -- Loc_ToAns(event.label)
+    ))
+    
+    local dr_frame = string.format("__replay_enhancements__%s", id)
+    -- Experimental dr based text label
+    --dr_setdisplay(dr_frame, true)
+    --dr_setautoclear(dr_frame, 0)
+    --dr_text3d(dr_frame, position.x, position.y + 2, position.z, Loc_ToAnsi(title), 255, 255, 255)
+
+    -- No icon on the hintpoint; instead let ThreatArrow icon display
+    local hintpoint_id = HintPoint_Add(position, true, title, 0, HPAT_Bonus, "")
     local event_id = UI_CreateEventCueClickable(icon, "", title, LOC(""), ReplayEnhancements_EventQueueClickCallback, 30, true)
     local map_icon_id = MapIcon_CreatePosition(position,"Icons_taskbar_hq_dead", 24, 255, 0, 0, 255)
     UI_CreateMinimapBlip(position, ReplayEnhancements.IndicatorDisplaySeconds, BT_Reveal)
 
+    local threat_group_id = ThreatGroup_Create()
+    ThreatArrow_Add(threat_group_id, position, icon)
+
     table.insert(ReplayEnhancements.SquadDeathIndicators, {
-        display_ticks = ReplayEnhancements.IndicatorDisplaySeconds * 8,
+        display_ticks = display_ticks,
         position = position,
         hintpoint_id = hintpoint_id,
         event_id = event_id,
         map_icon_id = map_icon_id,
+        dr_frame = dr_frame,
+        threat_group_id = threat_group_id,
     })
     ReplayEnhancements.EventQueueClickCallbackPositions[event_id] = position
 end
@@ -94,12 +186,7 @@ function ReplayEnhancements_RemoveDeathIndicator(index)
     HintPoint_Remove(item.hintpoint_id)
     MapIcon_Destroy(item.map_icon_id)
     table.remove(ReplayEnhancements.SquadDeathIndicators, index)
-end
-
-function Util_CreateLocString(text)
-	local tmpstr = LOC(text)
-	tmpstr[1] = text
-	return tmpstr
+    ThreatArrow_Remove(item.threat_group_id, item.position)
 end
 
 ReplayEnhancements_Init()
