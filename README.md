@@ -23,9 +23,19 @@
 1. Unpause the game
 
 # Planned features
-- [ ] Detect team weapon abandons and indicate as _decrewed_ instead of _killed_
-- [ ] Ignore retreating abandoned team weapon team member deaths
-- [ ] (Experimental) Use the threat arrow system to display arrows towards death event locations
+- [x] Detect team weapon abandons and indicate as _decrewed_ instead of _killed_
+- [x] Ignore retreating abandoned team weapon team member deaths
+- [x] (Experimental) Use the threat arrow system to display arrows towards death event locations
+- [x] Ignore aircraft deaths
+
+# Primary test replay 
+- [x] Infantry squad deaths
+- [x] HMG team weapon death
+- [x] AT gun team weapon death and retreating team weapon member death
+- [x] Vehicle death
+- [x] Vehicle abandon 
+- [x] Aircraft death
+
 
 # License
 - See [LICENSE.txt](LICENSE.txt)
