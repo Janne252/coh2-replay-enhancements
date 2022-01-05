@@ -1,6 +1,7 @@
 -- dofile("replay-enhancements\\init.scar")
 function ReplayEnhancements_Init()
     Scar_DoString([[loadfile("replay-enhancements\\data.scar")()]])
+    Scar_DoString([[loadfile("replay-enhancements\\lib.scar")()]])
     Scar_DoString([[loadfile("replay-enhancements\\api.scar")()]])
     bind("CONTROL+D", [[Scar_DoString("ReplayEnhancements_RemoveClosestDeathIndicator()")]])
 end

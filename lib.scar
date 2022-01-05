@@ -1,0 +1,60 @@
+---@param squad Squad
+---@param entity_types string[]
+function Squad_IsAnyEntityOfType(squad, entity_types)
+	for i = 1, Squad_Count(squad) do
+        local entityIndex = i - 1
+		local entity = Squad_EntityAt(squad, entityIndex)
+		for _, entity_type in ipairs(entity_types) do
+			if Entity_IsOfType(entity, entity_type) then
+				return true
+			else
+			end
+		end
+	end	
+
+	return false
+end
+
+function Util_CreateLocString(text)
+	local tmpstr = LOC(text)
+	tmpstr[1] = text
+	return tmpstr
+end
+
+function Squad_GetPlayerOwnerDisplayName(squad)
+	if World_OwnsSquad(squad) then
+		return Loc_ToAnsi(38100) -- World
+	else
+		return Loc_ToAnsi(Player_GetDisplayName(Squad_GetPlayerOwner(squad)))
+	end
+end
+
+function Entity_GetPlayerOwnerDisplayName(entity)
+	if World_OwnsEntity(entity) then
+		return Loc_ToAnsi(38100) -- World
+	else
+		return Loc_ToAnsi(Player_GetDisplayName(Entity_GetPlayerOwner(entity)))
+	end
+end
+
+---@param squad Squad
+---@return string
+function Squad_ResolveDisplayName(squad)
+    local data = ReplayEnhancementsData.sbps[BP_GetName(Squad_GetBlueprint(squad))] or {}
+    if data.screen_name and data.screen_name ~= 0 then
+        return Loc_ToAnsi(data.screen_name)
+    end
+
+    return BP_GetName(Squad_GetBlueprint(squad))
+end
+
+---@param entity Entity
+---@return string
+function Entity_ResolveDisplayName(entity)
+    local data = ReplayEnhancementsData.ebps[BP_GetName(Entity_GetBlueprint(entity))] or {}
+    if data.screen_name and data.screen_name ~= 0 then
+        return Loc_ToAnsi(data.screen_name)
+    end
+
+    return BP_GetName(Entity_GetBlueprint(entity))
+end
