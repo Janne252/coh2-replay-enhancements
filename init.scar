@@ -1,9 +1,15 @@
+local __replayenhancements = {
+    version = "0.2.0"
+}
+
+-- init template
 -- dofile("replay-enhancements\\init.scar")
 function ReplayEnhancements_Init()
-    Scar_DoString([[loadfile("replay-enhancements\\data.scar")()]])
+    Scar_DoString([[loadfile("replay-enhancements\\data.cscar")()]])
     Scar_DoString([[loadfile("replay-enhancements\\lib.scar")()]])
     Scar_DoString([[loadfile("replay-enhancements\\api.scar")()]])
     bind("CONTROL+D", [[Scar_DoString("ReplayEnhancements_RemoveClosestDeathIndicator()")]])
+    print(string.format("Replay enhancements version %s initialized!", __replayenhancements.version))
 end
 
 ReplayEnhancements_Init()

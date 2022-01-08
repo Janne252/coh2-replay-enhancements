@@ -37,24 +37,50 @@ function Entity_GetPlayerOwnerDisplayName(entity)
 	end
 end
 
----@param squad Squad
----@return string
-function Squad_ResolveDisplayName(squad)
-    local data = ReplayEnhancementsData.sbps[BP_GetName(Squad_GetBlueprint(squad))] or {}
-    if data.screen_name and data.screen_name ~= 0 then
-        return Loc_ToAnsi(data.screen_name)
-    end
+---@class ItemDisplayInfo
+---@field blueprint_name string
+---@field icon string
+---@field screen_name integer
+---@field screen_name_short integer
+---@field display_name string
+---@field display_name_short string
 
-    return BP_GetName(Squad_GetBlueprint(squad))
-end
+---@param item Squad | Entity
+---@return ItemDisplayInfo
+function Item_ResolveDisplayInfo(item)
+	options = options or {}
 
----@param entity Entity
----@return string
-function Entity_ResolveDisplayName(entity)
-    local data = ReplayEnhancementsData.ebps[BP_GetName(Entity_GetBlueprint(entity))] or {}
-    if data.screen_name and data.screen_name ~= 0 then
-        return Loc_ToAnsi(data.screen_name)
-    end
+	local item_type = scartype(item)
+	local blueprint
+	if item_type == ST_SQUAD then
+		blueprint = Squad_GetBlueprint(item)
+	elseif item_type == ST_ENTITY then
+		blueprint = Entity_GetBlueprint(item)
+	else
+		fatal(string.format("Unsupported item type %s", scartype_tostring(item)))
+	end
 
-    return BP_GetName(Entity_GetBlueprint(entity))
+	local blueprint_name = BP_GetName(blueprint)
+	local data = ReplayEnhancementsData[scartype_tostring(item)][blueprint_name]
+
+	local display_name = blueprint_name
+	local display_name_short = blueprint_name
+
+	if data.screen_name and data.screen_name ~= 0 then
+		display_name = Loc_ToAnsi(data.screen_name)
+		display_name_short = Loc_ToAnsi(data.screen_name)
+	end
+
+	if data.screen_name_short and data.screen_name_short ~= 0 then
+		display_name_short = Loc_ToAnsi(data.screen_name_short)
+	end
+
+	return {
+		blueprint_name = blueprint_name,
+		icon = data.icon,
+		screen_name = data.screen_name,
+		screen_name_short = data.screen_name_short,
+		display_name = display_name,
+		display_name_short = display_name_short,
+	}
 end

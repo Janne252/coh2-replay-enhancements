@@ -90,33 +90,21 @@ function ReplayEnhancements_TryRegisterDeathEvent(squad, causer, event)
     end
 
     local owner = Squad_GetPlayerOwnerDisplayName(squad)
-    local causer_owner = "N/A"
     
     if not World_OwnsSquad(squad) then
         owner = Loc_ToAnsi(Player_GetDisplayName(Squad_GetPlayerOwner(squad)))
     end
 
     local position = Squad_GetPosition(squad)
-    local squadData = ReplayEnhancementsData.sbps[BP_GetName(Squad_GetBlueprint(squad))] or {}
-    -- Default name based on the sbp
-    local squad_name = Squad_ResolveDisplayName(squad)
-    local causer_name = ""
+    local squadData = Item_ResolveDisplayInfo(squad)
     local icon = squadData.icon or "Icons_taskbar_hq_dead"
 
-    if scartype(causer) == ST_SQUAD then
-        causer_name = Squad_ResolveDisplayName(causer)
-        causer_owner = Squad_GetPlayerOwnerDisplayName(causer)
-    elseif scartype(causer) == ST_ENTITY then
-        causer_name = Entity_ResolveDisplayName(causer)
-        causer_owner = Entity_GetPlayerOwnerDisplayName(causer)
-    end
     local display_ticks = ReplayEnhancements.IndicatorDisplaySeconds * 8
 
-    local title = Util_CreateLocString(string.format("%s\n%s", 
+    local title = Util_CreateLocString(string.format("%s\n%s (%s)", 
         owner, 
-        squad_name
-        --  Killed/Abandoned is not displayed; likely not relevant
-        -- Loc_ToAns(event.label)
+        squadData.display_name_short,
+        Loc_ToAnsi(event.label)
     ))
     
     local dr_frame = string.format("__replay_enhancements__%s", id)
