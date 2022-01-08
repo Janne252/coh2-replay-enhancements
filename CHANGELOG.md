@@ -1,5 +1,9 @@
 # Changelog 
 
+## [0.2.0] - 2022-01-08
+- Event indicators now use the shorter name of a unit if available (based on `screen_name_short` field)
+- Event indicators now have a suffix based on the type of the event (`(killed)` or `(abandoned)`)
+
 ## [0.1.0] - 2022-01-05
 - Simplified death indicators by removing icon and "Killed" suffix
     - Death event unit icon is now displayed with a threat arrow
