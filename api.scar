@@ -134,13 +134,13 @@ function ReplayEnhancements_TryRegisterDeathEvent(squad, causer)
     
     -- Ignore all airplanes
     if ReplayEnhancements_GetProperty(squad, "is_aircraft") == true then
-        Log(string.format("[%s] is_aircraft", BP_GetName(Squad_GetBlueprint(squad))), "exit")
+        --Log(string.format("[%s] is_aircraft", BP_GetName(Squad_GetBlueprint(squad))), "exit")
         return
     end
 
     -- Ignore squads that consist entirely of abandoned entities, i.e. squads created during team weapon abandons.
     if Squad_IsRetreating(squad) and ReplayEnhancements_GetProperty(squad, "is_result_of_abandon") == true then
-        Log(string.format("[%s] is_result_of_abandon", BP_GetName(Squad_GetBlueprint(squad))), "exit")
+        --Log(string.format("[%s] is_result_of_abandon", BP_GetName(Squad_GetBlueprint(squad))), "exit")
         return
     end
 
