@@ -50,7 +50,7 @@ ReplayEnhancements = {
 ---@param item Squad | Entity
 ---@param name string
 ---@param value any
-function ReplayEnhancements_UpdateProperty(item, name, value)
+function ReplayEnhancements_SetProperty(item, name, value)
     local item_type = scartype_tostring(item)
     local key = Item_GetGameID(item)
     if ReplayEnhancements[item_type][key] == nil then
@@ -81,15 +81,19 @@ function ReplayEnhancements_OnEntityAbandoned(entity, causer)
 
     if squad ~= nil then
         local squad_id = Squad_GetGameID(squad)
+        -- Display team weapon abandons immediately due to withdrawing crew members
+        if Squad_IsAnyEntityOfType(squad, {"team_weapon"}) then
+            ReplayEnhancements_TryRegisterDeathEvent(squad, causer, ReplayEnhancements.DeathEventType.Abandoned)
+        end
         -- Mark squad as abandoned to prevent displaying both death and abandonment event
-        ReplayEnhancements_UpdateProperty(squad, "is_abandoned", true)
+        ReplayEnhancements_SetProperty(squad, "is_abandoned", true)
         -- Mark squad entities as abandoned
         for entity_index = 0, Squad_Count(squad) - 1 do
             local squad_entity = Squad_EntityAt(squad, entity_index)
             -- Vehicles and team weapons may get re-crewed and abandoned again
             if not Entity_IsOfType(squad_entity, "vehicle") and not Entity_IsOfType(squad_entity, "team_weapon") then
-                ReplayEnhancements_UpdateProperty(squad_entity, "is_abandoned", true)
-                ReplayEnhancements_UpdateProperty(squad_entity, "abandon_squad_id", squad_id)
+                ReplayEnhancements_SetProperty(squad_entity, "is_abandoned", true)
+                ReplayEnhancements_SetProperty(squad_entity, "abandon_squad_id", squad_id)
             end
         end
     end
@@ -97,7 +101,7 @@ end
 
 ---@param squad Squad
 function ReplayEnhancements_OnSquadKilled(squad, causer)
-    ReplayEnhancements_TryRegisterDeathEvent(squad, causer)
+    ReplayEnhancements_TryRegisterDeathEvent(squad, causer, ReplayEnhancements.DeathEventType.Killed)
 end
 
 function ReplayEnhancements_UpdateSquadInfo()
@@ -108,7 +112,7 @@ function ReplayEnhancements_UpdateSquadInfo()
         SGroup_ForEach(sg_squads, function(_, _, squad)
             local squad_id = Squad_GetGameID(squad)
             if Squad_IsAnyEntityOfType(squad, {"aircraft"}) then
-                ReplayEnhancements_UpdateProperty(squad, "is_aircraft", true)
+                ReplayEnhancements_SetProperty(squad, "is_aircraft", true)
             end
 
             local abandoned_crew_member_count = 0
@@ -121,17 +125,23 @@ function ReplayEnhancements_UpdateSquadInfo()
                 end
             end
             -- Detect squad that has been created by team weapon abandon (the squad consists entirely of entities that have been marked as abandoned)
-            ReplayEnhancements_UpdateProperty(squad, "is_result_of_abandon", abandoned_crew_member_count == squad_size)
+            ReplayEnhancements_SetProperty(squad, "is_result_of_abandon", abandoned_crew_member_count == squad_size)
         end)
     end
 end
 
 ---@param squad Squad
 ---@param causer Squad | Entity | nil
-function ReplayEnhancements_TryRegisterDeathEvent(squad, causer)
-    local event = ReplayEnhancements.DeathEventType.Killed
+---@param event SquadDeathEventType
+function ReplayEnhancements_TryRegisterDeathEvent(squad, causer, event)
     local id = Squad_GetGameID(squad)
-    
+
+    -- Prevent reporting same squad twice
+    if ReplayEnhancements_GetProperty(squad, "is_reported") == true then
+        return
+    end
+    ReplayEnhancements_SetProperty(squad, "is_reported", true)
+
     -- Ignore all airplanes
     if ReplayEnhancements_GetProperty(squad, "is_aircraft") == true then
         --Log(string.format("[%s] is_aircraft", BP_GetName(Squad_GetBlueprint(squad))), "exit")
