@@ -37,6 +37,15 @@ function Entity_GetPlayerOwnerDisplayName(entity)
 	end
 end
 
+function Item_GetGameID(item)
+	local item_type = scartype(item)
+	if item_type == ST_SQUAD then
+		return Squad_GetGameID(item)
+	elseif item_type == ST_ENTITY then
+		return Entity_GetGameID(item)
+	end
+end
+
 ---@class ItemDisplayInfo
 ---@field blueprint_name string
 ---@field icon string
@@ -83,4 +92,19 @@ function Item_ResolveDisplayInfo(item)
 		display_name = display_name,
 		display_name_short = display_name_short,
 	}
+end
+
+g_log = {
+	default = "",
+}
+
+function Log(value, name, options)
+	name = name or "default"
+	options = options or {}
+	local append = tostring(value) .. "\n"
+	g_log[name] = (g_log[name] or "") .. append
+	if options.truncate then
+		g_log[name] = append
+	end
+	PersistentMode_SerializeResults(string.format("userdata:%s.%s.log.txt", "dev", name), g_log[name])
 end

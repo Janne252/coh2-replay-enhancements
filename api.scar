@@ -20,13 +20,16 @@ end
 
 ---@class SquadInfo
 ---@field is_aircraft boolean
+---@field is_result_of_abandon boolean
+
+---@class EntityInfo
+---@field is_abandoned boolean
 
 ReplayEnhancements = {
     ---@type SquadDeathIndicator[]
     SquadDeathIndicators = {},
     EventQueueClickCallbackPositions = {},
     IndicatorDisplaySeconds = 60,
-    AbandonedSquads = {},
     DeathEventType = {
         ---@type SquadDeathEventType
         Abandoned = {
@@ -38,8 +41,37 @@ ReplayEnhancements = {
         },
     },
     ---@type SquadInfo
-    Squads = {},
+    ["SQUAD"] = {},
+    ---@type EntityInfo
+    ["ENTITY"] = {},
 }
+
+---@param item Squad | Entity
+---@param name string
+---@param value any
+function ReplayEnhancements_UpdateProperty(item, name, value)
+    local item_type = scartype_tostring(item)
+    local key = Item_GetGameID(item)
+    if ReplayEnhancements[item_type][key] == nil then
+        ReplayEnhancements[item_type][key] = {}
+    end
+    ReplayEnhancements[item_type][key][name] = value
+end
+
+---@param item Squad | Entity
+---@param name string
+---@param options table | nil
+function ReplayEnhancements_GetProperty(item, name, options)
+    options = options or {}
+    local item_type = scartype_tostring(item)
+    local key = Item_GetGameID(item)
+
+    if ReplayEnhancements[item_type][key] == nil or ReplayEnhancements[item_type][key][name] == nil then
+        return options.default
+    end
+
+    return ReplayEnhancements[item_type][key][name]
+end
 
 ---@param entity Entity
 function ReplayEnhancements_OnEntityAbandoned(entity, causer)
@@ -47,14 +79,22 @@ function ReplayEnhancements_OnEntityAbandoned(entity, causer)
     local position = Entity_GetPosition(entity)
 
     if squad ~= nil then
-        ReplayEnhancements_TryRegisterDeathEvent(squad, causer, ReplayEnhancements.DeathEventType.Abandoned)
-        ReplayEnhancements.AbandonedSquads[Squad_GetGameID(squad)] = true
+        -- Mark squad as abandoned to prevent displaying both death and abandonment event
+        ReplayEnhancements_UpdateProperty(squad, "is_abandoned", true)
+        -- Mark squad entities as abandoned
+        for entity_index = 0, Squad_Count(squad) - 1 do
+            local squad_entity = Squad_EntityAt(squad, entity_index)
+            -- Vehicles and team weapons may get re-crewed and abandoned again
+            if not Entity_IsOfType(squad_entity, "vehicle") and not Entity_IsOfType(squad_entity, "team_weapon") then
+                ReplayEnhancements_UpdateProperty(squad_entity, "is_abandoned", true)
+            end
+        end
     end
 end
 
 ---@param squad Squad
 function ReplayEnhancements_OnSquadKilled(squad, causer)
-    ReplayEnhancements_TryRegisterDeathEvent(squad, causer, ReplayEnhancements.DeathEventType.Killed)
+    ReplayEnhancements_TryRegisterDeathEvent(squad, causer)
 end
 
 function ReplayEnhancements_UpdateSquadInfo()
@@ -63,11 +103,21 @@ function ReplayEnhancements_UpdateSquadInfo()
         local player = World_GetPlayerAt(i)
         local sg_squads = Player_GetSquads(player)
         SGroup_ForEach(sg_squads, function(_, _, squad)
-            local squad_id = Squad_GetGameID(squad)
-            if ReplayEnhancements.Squads[squad_id] == nil then
-                ReplayEnhancements.Squads[squad_id] = {
-                    is_aircraft = Squad_IsAnyEntityOfType(squad, {"aircraft"})
-                }
+            if Squad_IsAnyEntityOfType(squad, {"aircraft"}) then
+                ReplayEnhancements_UpdateProperty(squad, "is_aircraft", true)
+            end
+
+            local abandoned_crew_member_count = 0
+            local squad_size = Squad_Count(squad)
+            for j = 0, squad_size - 1 do
+                local entity = Squad_EntityAt(squad, j)
+                if ReplayEnhancements_GetProperty(entity, "is_abandoned", {default = false}) == true then
+                    abandoned_crew_member_count = abandoned_crew_member_count + 1
+                end
+            end
+            -- Detect squad that has been created by team weapon abandon (the squad consists entirely of entities that have been marked as abandoned)
+            if abandoned_crew_member_count == squad_size then
+                ReplayEnhancements_UpdateProperty(squad, "is_result_of_abandon", true)
             end
         end)
     end
@@ -75,20 +125,25 @@ end
 
 ---@param squad Squad
 ---@param causer Squad | Entity | nil
----@param event SquadDeathEventType
-function ReplayEnhancements_TryRegisterDeathEvent(squad, causer, event)
+function ReplayEnhancements_TryRegisterDeathEvent(squad, causer)
+    local event = ReplayEnhancements.DeathEventType.Killed
     local id = Squad_GetGameID(squad)
     
     -- Ignore all airplanes
-    if ReplayEnhancements.Squads[id] and ReplayEnhancements.Squads[id].is_aircraft then
+    if ReplayEnhancements_GetProperty(squad, "is_aircraft", {default = false}) == true then
         return
     end
 
-    -- Ignore abandoned squads; There are captured via ReplayEnhancements_OnEntityAbandoned
-    if ReplayEnhancements.AbandonedSquads[id] == true then
+    -- Ignore squads that consist entirely of abandoned entities, i.e. squads created during team weapon abandons.
+    if Squad_IsRetreating(squad) and ReplayEnhancements_GetProperty(squad, "is_result_of_abandon", {default = false}) == true then
         return
     end
 
+    -- Abandons occur before death; see if the squad was actually abandoned
+    if ReplayEnhancements_GetProperty(squad, "is_abandoned", {default = false}) == true then
+        event = ReplayEnhancements.DeathEventType.Abandoned
+    end
+    
     local owner = Squad_GetPlayerOwnerDisplayName(squad)
     
     if not World_OwnsSquad(squad) then
@@ -107,12 +162,6 @@ function ReplayEnhancements_TryRegisterDeathEvent(squad, causer, event)
         Loc_ToAnsi(event.label)
     ))
     
-    local dr_frame = string.format("__replay_enhancements__%s", id)
-    -- Experimental dr based text label
-    --dr_setdisplay(dr_frame, true)
-    --dr_setautoclear(dr_frame, 0)
-    --dr_text3d(dr_frame, position.x, position.y + 2, position.z, Loc_ToAnsi(title), 255, 255, 255)
-
     -- No icon on the hintpoint; instead let ThreatArrow icon display
     local hintpoint_id = HintPoint_Add(position, true, title, 0, HPAT_Bonus, "")
     local event_id = UI_CreateEventCueClickable(icon, "", title, LOC(""), ReplayEnhancements_EventQueueClickCallback, 30, true)
@@ -128,7 +177,6 @@ function ReplayEnhancements_TryRegisterDeathEvent(squad, causer, event)
         hintpoint_id = hintpoint_id,
         event_id = event_id,
         map_icon_id = map_icon_id,
-        dr_frame = dr_frame,
         threat_group_id = threat_group_id,
     })
     ReplayEnhancements.EventQueueClickCallbackPositions[event_id] = position
