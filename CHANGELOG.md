@@ -1,5 +1,9 @@
 # Changelog 
 
+## [0.2.1] - 2022-01-09
+- Fixed rare occurrence of double event indicator displayed on abandoned team weapons that were previously re-crewed
+- Fixed US Forces vehicle crew disembark being incorrectly detected as vehicle abandon 
+
 ## [0.2.0] - 2022-01-08
 - Event indicators now use the shorter name of a unit if available (based on `screen_name_short` field)
 - Event indicators now have a suffix based on the type of the event (`(killed)` or `(abandoned)`)

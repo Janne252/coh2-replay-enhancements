@@ -22,11 +22,8 @@
 1. Close the in-game console (same hotkey as the one used to open the in-game console)
 1. Unpause the game
 
-# Planned features
-- [x] Detect team weapon abandons and indicate as _decrewed_ instead of _killed_
-- [x] Ignore retreating abandoned team weapon team member deaths
-- [x] (Experimental) Use the threat arrow system to display arrows towards death event locations
-- [x] Ignore aircraft deaths
+# Known issues
+- Us Forces vehicle with a crew creates an additional death event indicator for the crew on vehicle death
 
 # Primary test replay 
 - [x] Infantry squad deaths
