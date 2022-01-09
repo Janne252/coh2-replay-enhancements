@@ -24,6 +24,7 @@ end
 
 ---@class EntityInfo
 ---@field is_abandoned boolean
+---@field abandon_squad_id integer
 
 ReplayEnhancements = {
     ---@type SquadDeathIndicator[]
@@ -79,6 +80,7 @@ function ReplayEnhancements_OnEntityAbandoned(entity, causer)
     local position = Entity_GetPosition(entity)
 
     if squad ~= nil then
+        local squad_id = Squad_GetGameID(squad)
         -- Mark squad as abandoned to prevent displaying both death and abandonment event
         ReplayEnhancements_UpdateProperty(squad, "is_abandoned", true)
         -- Mark squad entities as abandoned
@@ -87,6 +89,7 @@ function ReplayEnhancements_OnEntityAbandoned(entity, causer)
             -- Vehicles and team weapons may get re-crewed and abandoned again
             if not Entity_IsOfType(squad_entity, "vehicle") and not Entity_IsOfType(squad_entity, "team_weapon") then
                 ReplayEnhancements_UpdateProperty(squad_entity, "is_abandoned", true)
+                ReplayEnhancements_UpdateProperty(squad_entity, "abandon_squad_id", squad_id)
             end
         end
     end
@@ -99,26 +102,26 @@ end
 
 function ReplayEnhancements_UpdateSquadInfo()
     -- Collect data from squads that cannot be obtained once they're dead
-    for i = 1, World_GetPlayerCount() do
-        local player = World_GetPlayerAt(i)
+    for player_index = 1, World_GetPlayerCount() do
+        local player = World_GetPlayerAt(player_index)
         local sg_squads = Player_GetSquads(player)
         SGroup_ForEach(sg_squads, function(_, _, squad)
+            local squad_id = Squad_GetGameID(squad)
             if Squad_IsAnyEntityOfType(squad, {"aircraft"}) then
                 ReplayEnhancements_UpdateProperty(squad, "is_aircraft", true)
             end
 
             local abandoned_crew_member_count = 0
             local squad_size = Squad_Count(squad)
-            for j = 0, squad_size - 1 do
-                local entity = Squad_EntityAt(squad, j)
-                if ReplayEnhancements_GetProperty(entity, "is_abandoned", {default = false}) == true then
+            for entity_index = 0, squad_size - 1 do
+                local entity = Squad_EntityAt(squad, entity_index)
+                -- If the entity was part o abandoned squad and is now part of a different squad
+                if ReplayEnhancements_GetProperty(entity, "is_abandoned") == true and ReplayEnhancements_GetProperty(entity, "abandon_squad_id") ~= squad_id then
                     abandoned_crew_member_count = abandoned_crew_member_count + 1
                 end
             end
             -- Detect squad that has been created by team weapon abandon (the squad consists entirely of entities that have been marked as abandoned)
-            if abandoned_crew_member_count == squad_size then
-                ReplayEnhancements_UpdateProperty(squad, "is_result_of_abandon", true)
-            end
+            ReplayEnhancements_UpdateProperty(squad, "is_result_of_abandon", abandoned_crew_member_count == squad_size)
         end)
     end
 end
@@ -130,17 +133,19 @@ function ReplayEnhancements_TryRegisterDeathEvent(squad, causer)
     local id = Squad_GetGameID(squad)
     
     -- Ignore all airplanes
-    if ReplayEnhancements_GetProperty(squad, "is_aircraft", {default = false}) == true then
+    if ReplayEnhancements_GetProperty(squad, "is_aircraft") == true then
+        Log(string.format("[%s] is_aircraft", BP_GetName(Squad_GetBlueprint(squad))), "exit")
         return
     end
 
     -- Ignore squads that consist entirely of abandoned entities, i.e. squads created during team weapon abandons.
-    if Squad_IsRetreating(squad) and ReplayEnhancements_GetProperty(squad, "is_result_of_abandon", {default = false}) == true then
+    if Squad_IsRetreating(squad) and ReplayEnhancements_GetProperty(squad, "is_result_of_abandon") == true then
+        Log(string.format("[%s] is_result_of_abandon", BP_GetName(Squad_GetBlueprint(squad))), "exit")
         return
     end
 
     -- Abandons occur before death; see if the squad was actually abandoned
-    if ReplayEnhancements_GetProperty(squad, "is_abandoned", {default = false}) == true then
+    if ReplayEnhancements_GetProperty(squad, "is_abandoned") == true then
         event = ReplayEnhancements.DeathEventType.Abandoned
     end
     
