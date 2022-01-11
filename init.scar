@@ -8,7 +8,7 @@ function ReplayEnhancements_Init()
     Scar_DoString([[loadfile("replay-enhancements\\data.cscar")()]])
     Scar_DoString([[loadfile("replay-enhancements\\lib.scar")()]])
     Scar_DoString([[loadfile("replay-enhancements\\api.scar")()]])
-    bind("CONTROL+D", [[Scar_DoString("ReplayEnhancements_RemoveClosestDeathIndicator()")]])
+    bind("CONTROL+D", [[Scar_DoString("ReplayEnhancements_RemoveClosestEventIndicator()")]])
     print(string.format("Replay enhancements version %s initialized!", __replayenhancements.version))
 end
 
