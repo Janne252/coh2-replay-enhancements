@@ -1,5 +1,12 @@
 # Changelog 
 
+## [0.2.2] - 2022-01-11
+- Fixed non-ascii characters not being rendered properly (player names, unit names)
+- Mounted vehicle crew deaths are now ignored for standard vehicle crews:
+    - US Forces vehicle crew on any vehicle
+    - US Forces medics on Ambulance
+- Fixed event indicator minimap blips not being tied to in-game simulation time
+
 ## [0.2.1] - 2022-01-09
 - Fixed rare occurrence of double event indicator displayed on abandoned team weapons that were previously re-crewed
 - Fixed US Forces vehicle crew disembark being incorrectly detected as vehicle abandon 

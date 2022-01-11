@@ -13,6 +13,7 @@ end
 ---@field map_icon_id integer
 ---@field dr_frame string
 ---@field threat_group_id integer
+---@field minimap_blip_id integer
 
 ---@class SquadDeathEventType
 ---@field label integer
@@ -33,11 +34,11 @@ ReplayEnhancements = {
     EventType = {
         ---@type SquadDeathEventType
         Abandoned = {
-            label = 11008113, -- Abandoned
+            label = "$11008113", -- Abandoned
         },
         ---@type SquadDeathEventType
         Killed = {
-            label = 710029, -- Killed
+            label = "$710029", -- Killed
         },
     },
     ---@type SquadInfo
@@ -101,6 +102,7 @@ end
 ---@param squad Squad
 function ReplayEnhancements_OnSquadKilled(squad, causer)
     ReplayEnhancements_TryRegisterEvent(squad, causer, ReplayEnhancements.EventType.Killed)
+    ReplayEnhancements_SetProperty(squad, "is_dead", true)
 end
 
 function ReplayEnhancements_UpdateTick()
@@ -108,11 +110,21 @@ function ReplayEnhancements_UpdateTick()
     for player_index = 1, World_GetPlayerCount() do
         local player = World_GetPlayerAt(player_index)
         local sg_squads = Player_GetSquads(player)
+        
+        -- Pre-step; reset some data that updates conditionally
+        SGroup_ForEach(sg_squads, function(_, _, squad)
+            if ReplayEnhancements_GetProperty(squad, "is_active_vehicle_crew") then
+                ReplayEnhancements_SetProperty(squad, "is_active_vehicle_crew", nil)
+                ReplayEnhancements_SetProperty(squad, "vehicle_squad_id", nil)
+            end
+        end)
+
         SGroup_ForEach(sg_squads, function(_, _, squad)
             local squad_id = Squad_GetGameID(squad)
             if Squad_IsAnyEntityOfType(squad, {"aircraft"}) then
                 ReplayEnhancements_SetProperty(squad, "is_aircraft", true)
             end
+
 
             local abandoned_crew_member_count = 0
             local squad_size = Squad_Count(squad)
@@ -125,6 +137,21 @@ function ReplayEnhancements_UpdateTick()
             end
             -- Detect squad that has been created by team weapon abandon (the squad consists entirely of entities that have been marked as abandoned)
             ReplayEnhancements_SetProperty(squad, "is_result_of_abandon", abandoned_crew_member_count == squad_size)
+
+            local driver_squad = Squad_GetVehicleMobileDriverSquad(squad)
+
+            if driver_squad ~= nil then
+                -- Mark the driver squad as vehicle crew in special circumstances
+                if 
+                    -- Standard US Forces vehicle crew
+                    Squad_IsAnyEntityOfType(driver_squad, {"aef_vehicle_crew"}) or
+                    -- Medics in an ambulance
+                    (Squad_GetBlueprintName(driver_squad) == "usf_medic_squad_mp" and Squad_GetBlueprintName(squad) == "dodge_wc51_ambulance_squad_mp")
+                then
+                    ReplayEnhancements_SetProperty(driver_squad, "is_active_vehicle_crew", true)
+                    ReplayEnhancements_SetProperty(driver_squad, "vehicle_squad_id", Squad_GetGameID(squad))
+                end
+            end
         end)
     end
 
@@ -145,52 +172,88 @@ function ReplayEnhancements_TryRegisterEvent(squad, causer, event)
     local id = Squad_GetGameID(squad)
 
     -- Prevent reporting same squad twice
-    if ReplayEnhancements_GetProperty(squad, "is_reported") == true then
+    if ReplayEnhancements_GetProperty(squad, "is_reported") then
         return
     end
     ReplayEnhancements_SetProperty(squad, "is_reported", true)
 
     -- Ignore all airplanes
-    if ReplayEnhancements_GetProperty(squad, "is_aircraft") == true then
-        --Log(string.format("[%s] is_aircraft", BP_GetName(Squad_GetBlueprint(squad))), "exit")
+    if ReplayEnhancements_GetProperty(squad, "is_aircraft") then
+        --Log(string.format("[%s] is_aircraft", Squad_GetBlueprintName(squad)), "exit")
         return
     end
 
     -- Ignore squads that consist entirely of abandoned entities, i.e. squads created during team weapon abandons.
-    if Squad_IsRetreating(squad) and ReplayEnhancements_GetProperty(squad, "is_result_of_abandon") == true then
-        --Log(string.format("[%s] is_result_of_abandon", BP_GetName(Squad_GetBlueprint(squad))), "exit")
+    if Squad_IsRetreating(squad) and ReplayEnhancements_GetProperty(squad, "is_result_of_abandon") then
+        --Log(string.format("[%s] is_result_of_abandon", Squad_GetBlueprintName(squad)), "exit")
         return
     end
 
+    -- If the dead squad is a "standard" vehicle crew squad and its vehicle has died already
+    if ReplayEnhancements_GetProperty(squad, "is_active_vehicle_crew") then 
+        local vehicle_squad_id = ReplayEnhancements_GetProperty(squad, "vehicle_squad_id")
+        if vehicle_squad_id ~= nil and ReplayEnhancements["SQUAD"][vehicle_squad_id] ~= nil and ReplayEnhancements["SQUAD"][vehicle_squad_id].is_dead then
+            --Log(string.format("[%s] is_active_vehicle_crew", Squad_GetBlueprintName(squad)), "exit")
+            return
+        end
+    end
+
     -- Abandons occur before death; see if the squad was actually abandoned
-    if ReplayEnhancements_GetProperty(squad, "is_abandoned") == true then
+    if ReplayEnhancements_GetProperty(squad, "is_abandoned") then
         event = ReplayEnhancements.EventType.Abandoned
     end
     
     local owner = Squad_GetPlayerOwnerDisplayName(squad)
-    
-    if not World_OwnsSquad(squad) then
-        owner = Loc_ToAnsi(Player_GetDisplayName(Squad_GetPlayerOwner(squad)))
-    end
-
+   
     local position = Squad_GetPosition(squad)
     local squadData = Item_ResolveDisplayInfo(squad)
-    local icon = squadData.icon or "Icons_taskbar_hq_dead"
+    local icon = squadData.icon_name
+    if icon == nil or icon == "" then 
+        icon = "Icons_taskbar_hq_dead"
+    end
+    local map_icon = "Icons_taskbar_hq_dead"
 
     local display_ticks = ReplayEnhancements.EventIndicatorDisplaySeconds * 8
 
-    local title = Util_CreateLocString(string.format("%s\n%s (%s)", 
-        owner, 
+    -- Pass in other locstrings as $<number> references to preserve non-ascii characters (UCS-2 LE or UTF-16 LE)
+    local title = Loc_FormatText(
+        Util_CreateLocString("%1OWNER%\n%2NAME% (%3EVENT%)"),
+        owner,
         squadData.display_name_short,
-        Loc_ToAnsi(event.label)
-    ))
-    
+        event.label
+    )
+
+    local portrait = squadData.icon
+    if World_IsWinterMap() then
+        if squadData.portrait_icon_winter ~= nil and squadData.portrait_icon_winter ~= "" then
+            portrait = squadData.portrait_icon_winter
+        end
+    else
+        if squadData.portrait_icon_summer ~= nil and squadData.portrait_icon_summer ~= "" then
+            portrait = squadData.portrait_icon_summer
+        end
+    end
+
+    -- Experimental UI elements based on Actor_PlaySpeechInternal
+    -- https://github.com/Janne252/coh2-replay-enhancements/issues/3
+    -- Subtitle_PlaySpeech(
+    --     portrait,
+    --     squadData.display_name_short,
+    --     title,
+    --     false,
+    --     true,
+    --     false,
+    --     false,
+    --     "mission/global"
+    -- )
+
     -- No icon on the hintpoint; instead let ThreatArrow icon display
     local hintpoint_id = HintPoint_Add(position, true, title, 0, HPAT_Bonus, "")
     local event_id = UI_CreateEventCueClickable(icon, "", title, LOC(""), ReplayEnhancements_EventQueueClickCallback, 30, true)
-    local map_icon_id = MapIcon_CreatePosition(position,"Icons_taskbar_hq_dead", 24, 255, 0, 0, 255)
-    UI_CreateMinimapBlip(position, ReplayEnhancements.EventIndicatorDisplaySeconds, BT_Reveal)
+    local map_icon_id = MapIcon_CreatePosition(position, map_icon, 24, 255, 0, 0, 255)
+    local minimap_blip_id = UI_CreateMinimapBlip(position, ReplayEnhancements.EventIndicatorDisplaySeconds, BT_Reveal)
 
+    -- Each event has its own group to prevent simultaneous events from being displayed with just one arrow
     local threat_group_id = ThreatGroup_Create()
     ThreatArrow_Add(threat_group_id, position, icon)
 
@@ -200,6 +263,7 @@ function ReplayEnhancements_TryRegisterEvent(squad, causer, event)
         hintpoint_id = hintpoint_id,
         event_id = event_id,
         map_icon_id = map_icon_id,
+        minimap_blip_id = minimap_blip_id,
         threat_group_id = threat_group_id,
     })
     ReplayEnhancements.EventQueueClickCallbackPositions[event_id] = position
@@ -235,6 +299,7 @@ function ReplayEnhancements_RemoveDeathIndicator(index)
     MapIcon_Destroy(item.map_icon_id)
     ThreatArrow_Remove(item.threat_group_id, item.position)
     ThreatGroup_Destroy(item.threat_group_id)
+    UI_DeleteMinimapBlip(item.minimap_blip_id)
     table.remove(ReplayEnhancements.EventIndicators, index)
 end
 

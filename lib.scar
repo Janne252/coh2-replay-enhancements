@@ -7,7 +7,6 @@ function Squad_IsAnyEntityOfType(squad, entity_types)
 		for _, entity_type in ipairs(entity_types) do
 			if Entity_IsOfType(entity, entity_type) then
 				return true
-			else
 			end
 		end
 	end	
@@ -23,17 +22,17 @@ end
 
 function Squad_GetPlayerOwnerDisplayName(squad)
 	if World_OwnsSquad(squad) then
-		return Loc_ToAnsi(38100) -- World
+		return "$38100" -- World
 	else
-		return Loc_ToAnsi(Player_GetDisplayName(Squad_GetPlayerOwner(squad)))
+		return Player_GetDisplayName(Squad_GetPlayerOwner(squad))
 	end
 end
 
 function Entity_GetPlayerOwnerDisplayName(entity)
 	if World_OwnsEntity(entity) then
-		return Loc_ToAnsi(38100) -- World
+		return "$38100" -- World
 	else
-		return Loc_ToAnsi(Player_GetDisplayName(Entity_GetPlayerOwner(entity)))
+		return Player_GetDisplayName(Entity_GetPlayerOwner(entity))
 	end
 end
 
@@ -70,27 +69,28 @@ function Item_ResolveDisplayInfo(item)
 	end
 
 	local blueprint_name = BP_GetName(blueprint)
-	local data = ReplayEnhancementsData[scartype_tostring(item)][blueprint_name]
+	local data = ReplayEnhancementsData[scartype_tostring(item)][blueprint_name] or {}
 
-	local display_name = blueprint_name
-	local display_name_short = blueprint_name
+	local display_name = Util_CreateLocString(blueprint_name)
+	local display_name_short = Util_CreateLocString(blueprint_name)
 
-	if data.screen_name and data.screen_name ~= 0 then
-		display_name = Loc_ToAnsi(data.screen_name)
-		display_name_short = Loc_ToAnsi(data.screen_name)
+	if data.screen_name ~= nil and data.screen_name ~= 0 then
+		display_name = string.format("$%s", data.screen_name)
+		display_name_short = string.format("$%s", data.screen_name)
 	end
 
-	if data.screen_name_short and data.screen_name_short ~= 0 then
-		display_name_short = Loc_ToAnsi(data.screen_name_short)
+	if data.screen_name_short ~= nil and data.screen_name_short ~= 0 then
+		display_name_short = string.format("$%s", data.screen_name_short)
 	end
 
 	return {
 		blueprint_name = blueprint_name,
-		icon = data.icon,
-		screen_name = data.screen_name,
-		screen_name_short = data.screen_name_short,
+		icon_name = data.icon_name,
+		symbol_icon_name = data.symbol_icon_name,
 		display_name = display_name,
 		display_name_short = display_name_short,
+		portrait_icon_summer = data.portrait_icon_summer,
+		portrait_icon_winter = data.portrait_icon_winter,
 	}
 end
 
@@ -107,4 +107,13 @@ function Log(value, name, options)
 		g_log[name] = append
 	end
 	PersistentMode_SerializeResults(string.format("userdata:%s.%s.log.txt", "dev", name), g_log[name])
+end
+
+
+function Squad_GetBlueprintName(squad)
+	return BP_GetName(Squad_GetBlueprint(squad))
+end
+
+function Entity_GetBlueprintName(entity)
+	return BP_GetName(Entity_GetBlueprint(entity))
 end

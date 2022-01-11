@@ -1,7 +1,7 @@
 # Features
 ![](screenshots/example-01.png)
 - All events of an entire squad dying are indicated with in-game UI elements
-    - Death events appear in the event queue andand clicking the event moves the camera to the event location
+    - Death events appear in the event queue and clicking the event moves the camera to the event location
     - Death event indicators are displayed for 60 seconds 
         - Indicator consists of a minimap/tactical map icon (red ☠️) and an in-game marker with player name, unit icon, and unit name
     - Any death event indicator can be removed by pressing `Ctrl+D` (likely not the final hotkey, can be easily changed)
@@ -21,9 +21,6 @@
 1. Paste in `dofile("replay-enhancements\\init.scar")` and press enter
 1. Close the in-game console (same hotkey as the one used to open the in-game console)
 1. Unpause the game
-
-# Known issues
-- Us Forces vehicle with a crew creates an additional death event indicator for the crew on vehicle death
 
 # Primary test replay 
 - [x] Infantry squad deaths
