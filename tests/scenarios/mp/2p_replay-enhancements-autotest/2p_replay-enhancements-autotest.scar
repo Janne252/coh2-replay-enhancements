@@ -1,0 +1,6 @@
+function ReplayEnhancementsAutoTest_Init()
+	-- Relative path to the main script
+	loadfile("replay-enhancements\\tests\\scenarios\\mp\\2p_replay-enhancements-autotest\\2p_replay-enhancements-autotest_main.scar")()
+end
+
+Scar_AddInit(ReplayEnhancementsAutoTest_Init)

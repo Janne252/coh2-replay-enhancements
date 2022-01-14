@@ -1,0 +1,14 @@
+minimap_size =  
+{
+	768,
+	768,
+}
+uses_ice = false
+visible_in_lobby = true
+scenario_type = 1
+
+slots = 
+{
+	{status = open, flags = flags_all},
+	{status = open, flags = flags_all, race = "aef"},
+}

@@ -1,0 +1,65 @@
+HeaderInfo =  
+{
+	scenarioname = "(2) replay-enhancements autotest",
+	scenariodescription = "(2) replay-enhancements autotest",
+	maxplayers = 2,
+	scenario_battlefront = 0,
+	scenarioabbrname = "(2) replay-enhancements autotest",
+	savedname = "",
+	version = 2008,
+	mapsize =  
+	{
+		256,
+		256,
+	},
+	music = "",
+	point_positions =  
+	{
+		 
+		{
+			y = 95.19270,
+			x = -96.72796,
+			owner_id = 1000,
+			ebp_name = "starting_position_shared_territory",
+		},
+		 
+		{
+			y = -96.40183,
+			x = 95.24826,
+			owner_id = 1001,
+			ebp_name = "starting_position_shared_territory",
+		},
+		 
+		{
+			y = 100.57483,
+			x = -5.63542,
+			owner_id = 0,
+			ebp_name = "territory_point_mp",
+		},
+		 
+		{
+			y = 68.40759,
+			x = -5.57231,
+			owner_id = 0,
+			ebp_name = "territory_point_mp",
+		},
+		 
+		{
+			y = 126.11171,
+			x = -28.20536,
+			owner_id = 0,
+			ebp_name = "territory_point_command",
+		},
+		 
+		{
+			y = 89.84771,
+			x = -28.07507,
+			owner_id = 0,
+			ebp_name = "territory_point_command",
+		},
+	},
+	default_skins =  
+	{
+	},
+}
+

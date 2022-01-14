@@ -1,0 +1,399 @@
+function ReplayEnhancements_DescribeTest(marker, text)
+	HintPoint_Add(marker, true, Util_CreateLocString(text), 4, HPAT_Hint)
+end
+
+function Util_CreateLocString(text)
+	local tmpstr = LOC(text)
+	tmpstr[1] = text
+	return tmpstr
+end
+
+function ReplayEnhancements_AddAbility(ability, player, pos)
+	Player_AddAbility(player, ability)
+	Player_SetAbilityAvailability(player, ability, ITEM_UNLOCKED)
+end
+
+function ReplayEnhancements_CreateAndSpawnSquad(sbp, player, pos, facing)
+	if facing == nil then
+		facing = pos
+	end
+	local sgroup = SGroup_Create("")
+	local driver_sgroup = nil
+	local squad = Squad_CreateAndSpawnToward(sbp, player, 0, Util_GetPosition(pos), Util_GetPosition(facing))
+	local driver_squad = Squad_GetVehicleMobileDriverSquad(squad)
+	
+	SGroup_Add(sgroup, squad)
+	if driver_squad ~= nil then
+		driver_sgroup = SGroup_Create("")
+		SGroup_Add(driver_sgroup, driver_squad)
+	end
+	return {
+		squad = squad,
+		sgroup = sgroup,
+		driver_squad = driver_squad,
+		driver_sgroup = driver_sgroup,
+	}
+end
+
+function ReplayEnhancements_CreateAndSpawnEntity(ebp, player, pos, facing)
+	if facing == nil then
+		facing = pos
+	end
+	local egroup = EGroup_Create("")
+	local entity = Entity_Create(ebp, player, Util_GetPosition(pos), Util_GetPosition(facing))
+	Entity_Spawn(entity)
+	Entity_ForceConstruct(entity)
+	EGroup_Add(egroup, entity)
+	return {
+		entity = entity,
+		egroup = egroup,
+	}
+end
+
+function ReplayEnhancements_SpawnAbandonedTeamWeapon(ebp, pos)
+	if scartype(pos) == ST_MARKER then
+		pos = Marker_GetPosition(pos)
+	end
+	local entity = Entity_CreateENV(ebp, pos, pos)
+	local egroup = EGroup_Create("")
+	EGroup_Add(egroup, entity)
+	Entity_Spawn(entity)
+	Cmd_CriticalHit(Game_GetLocalPlayer(), entity, CRIT.VEHICLE_ABANDON, 1)
+	return {
+		entity = entity,
+		egroup = egroup,
+	}
+end
+
+__util_delay__id = 0
+---@param delay number
+---@param callback function
+function Util_Delay(delay, callback)
+	local  taskName = "__util_delay_" .. __util_delay__id
+	_G[taskName] = function()
+		callback()
+		_G[taskName] = nil
+	end
+	Rule_AddOneShot(_G[taskName], delay)
+	__util_delay__id = __util_delay__id + 1
+end
+
+---@param ticks number
+---@param callback function
+function Util_DelayTicks(ticks, callback)
+	local seconds = 0
+	if ticks > 0 then seconds = ticks / 8 end
+	Util_Delay(seconds, callback)
+end
+
+FOW_Enable(false)
+AI_EnableAll(false)
+Camera_SetTuningValue(TV_DistMax, 1024)
+
+function ReplayEnhancementAutoTest_RunTests()
+	-- Disable when recording a replay for 2nd pass test
+	if true then
+		__replayenhancements_loader = "autotest"
+		-- Auto-initialize the mod
+		loadfile("replay-enhancements\\init.scar")()
+	end
+
+	local player01 = World_GetPlayerAt(1)
+	local player02 = World_GetPlayerAt(2)
+
+	local upgrades = {
+		UPG.BRITISH.PLATOON_BOFORS_RESEARCH_MP,
+	}
+
+	local base_buildings = {
+		{ebp = EBP.BRITISH.BRITISH_BUILDING_1_MP, offset = OFFSET_FRONT},
+	}
+
+	for i = 1, World_GetPlayerCount() do
+		local player = World_GetPlayerAt(i)
+		local starting_position = Player_GetStartingPosition(player)
+
+		Player_SetPopCapOverride(player, 1000)
+		Player_SetResource(player, RT_Manpower, 99999)
+		Player_SetResource(player, RT_Fuel, 99999)
+		Player_SetResource(player, RT_Munition, 99999)
+		Player_SetResource(player, RT_Command, 32)
+
+		for _, upgrade in ipairs(upgrades) do
+			Player_CompleteUpgrade(player, upgrade)
+		end
+		for _, item in ipairs(base_buildings) do
+			local position = Util_GetOffsetPosition(starting_position, item.offset, 6)
+			ReplayEnhancements_CreateAndSpawnEntity(item.ebp, player, position, starting_position)
+		end
+	end
+	
+	-- Infantry vs. Infantry [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_infantry_vs_infantry_alpha, "Report death of Grenadier squad")
+	local squad_infantry_vs_infantry_alpha_victim = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.GRENADIER_SQUAD_MP, player01, mkr_infantry_vs_infantry_spawn_alpha_01)
+	local squad_infantry_vs_infantry_alpha_killer = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.SHOCK_TROOPS_MP, player02, mkr_infantry_vs_infantry_spawn_alpha_02)
+	
+	-- Infantry vs. Infantry [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_infantry_vs_infantry_bravo, "Report death of Conscript squad")
+	local squad_infantry_vs_infantry_bravo_killer = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.PANZER_GRENADIER_SQUAD_MP, player01, mkr_infantry_vs_infantry_spawn_bravo_01)
+	local squad_infantry_vs_infantry_bravo_victim = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.CONSCRIPT_SQUAD_MP, player02, mkr_infantry_vs_infantry_spawn_bravo_02)
+	
+	-- HMG decrew vs. infantry [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_hmg_vs_infantry_alpha, "Report abandon of MG42")
+	local squad_hmg_vs_infantry_alpha_victim = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.MG42_HEAVY_MACHINE_GUN_SQUAD_MP, player01, mkr_hmg_vs_infantry_spawn_alpha_02, mkr_hmg_vs_infantry_spawn_alpha_facing)
+	local squad_hmg_vs_infantry_alpha_killer = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.SHOCK_TROOPS_MP, player02, mkr_hmg_vs_infantry_spawn_alpha_01)
+	
+	-- HMG decrew vs. infantry [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_hmg_vs_infantry_bravo, "Report abandon of Maxim")
+	local squad_hmg_vs_infantry_bravo_killer = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.PANZER_GRENADIER_SQUAD_MP, player01, mkr_hmg_vs_infantry_spawn_bravo_01)
+	local squad_hmg_vs_infantry_bravo_victim = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.M1910_MAXIM_HEAVY_MACHINE_GUN_SQUAD_MP, player02, mkr_hmg_vs_infantry_spawn_bravo_02, mkr_hmg_vs_infantry_spawn_bravo_facing)
+	
+	-- AT Gun decrew vs. infantry [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_atgun_vs_infantry_alpha, "Report abandon of Pak40")
+	local squad_atgun_decrew_vs_infantry_alpha_victim = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.PAK40_75MM_AT_GUN_SQUAD_MP, player01, mkr_atgun_vs_infantry_spawn_alpha_01)
+	local squad_atgun_decrew_vs_infantry_alpha_killer = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.SHOCK_TROOPS_MP, player02, mkr_atgun_vs_infantry_spawn_alpha_02)
+	
+	-- AT Gun decrew vs. infantry [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_atgun_vs_infantry_bravo, "Report abandon of ZiS")
+	local squad_atgun_decrew_vs_infantry_bravo_killer = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.PANZER_GRENADIER_SQUAD_MP, player01, mkr_atgun_vs_infantry_spawn_bravo_01)
+	local squad_atgun_decrew_vs_infantry_bravo_victim = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.M1942_ZIS_3_76MM_AT_GUN_SQUAD_MP, player02, mkr_atgun_vs_infantry_spawn_bravo_02)
+	
+	-- Light tank vs. medium tank [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_light_tank_vs_medium_tank_alpha, "Report death of Puma")
+	local squad_light_tank_vs_medium_tank_alpha_victim = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.PUMA_EAST_GERMAN_MP, player01, mkr_light_tank_vs_medium_tank_alpha_01)
+	local squad_light_tank_vs_medium_tank_alpha_killer = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.T_34_76_SQUAD_MP, player02, mkr_light_tank_vs_medium_tank_alpha_02)
+	
+	-- Light tank vs. medium tank [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_light_tank_vs_medium_tank_bravo, "Report death of T-70")
+	local squad_light_tank_vs_medium_tank_bravo_killer = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.PANZER_IV_SQUAD_MP, player01, mkr_light_tank_vs_medium_tank_bravo_01)
+	local squad_light_tank_vs_medium_tank_bravo_victim = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.T_70M_MP, player02, mkr_light_tank_vs_medium_tank_bravo_02)
+	
+	-- Light tank with vehicle crew vs. medium tank [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_vehicle_with_crew_natural_death_alpha, "Report death of Stuart, not vehicle crew")
+	local squad_vehicle_crew_natural_death_alpha_victim = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.M5A1_STUART_SQUAD_MP, player01, mkr_vehicle_with_crew_natural_death_alpha_01)
+	local squad_vehicle_crew_natural_death_alpha_killer = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.STUG_III_SQUAD_MP, player02, mkr_vehicle_with_crew_natural_death_alpha_02)
+	
+	-- Light tank with vehicle crew vs. medium tank [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_vehicle_with_crew_natural_death_bravo, "Report death of Greyhound, not vehicle crew")
+	local squad_vehicle_crew_natural_death_bravo_killer = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.OSTWIND_SQUAD_MP, player01, mkr_vehicle_with_crew_natural_death_bravo_01)
+	local squad_vehicle_crew_natural_death_bravo_victim = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.M8_GREYHOUND_SQUAD_MP, player02, mkr_vehicle_with_crew_natural_death_bravo_02)
+	
+	-- Vehicle abandon [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_vehicle_abandon_alpha, "Report Stug abandon")
+	local squad_vehicle_abandon_alpha = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.STUG_III_SQUAD_MP, player01, mkr_vehicle_abandon_alpha_01)
+	Util_Delay(3, function()
+		Cmd_CriticalHit(player01, squad_vehicle_abandon_alpha.sgroup, CRIT.VEHICLE_ABANDON, 1)
+	end)
+	-- Vehicle abandon [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_vehicle_abandon_bravo, "Report SU-76 abandon")
+	local squad_vehicle_abandon_bravo = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.SU_76M_MP, player02, mkr_vehicle_abandon_bravo_01)
+	Util_Delay(3, function()
+		Cmd_CriticalHit(player02, squad_vehicle_abandon_bravo.sgroup, CRIT.VEHICLE_ABANDON, 1)
+	end)
+	
+	-- Vehicle disembark [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_vehicle_disembark_alpha, "Don't report Sherman or Ambulance abandon")
+	local squad_disembark_alpha_01 = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.M4A3_SHERMAN_SQUAD_MP, player01, mkr_vehicle_disembark_alpha_01)
+	local squad_disembark_alpha_02 = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.DODGE_WC51_AMBULANCE_SQUAD_MP, player01, mkr_vehicle_disembark_alpha_02)
+	Util_Delay(1, function()
+		Cmd_Ability(squad_disembark_alpha_01.sgroup, ABILITY.AEF.VEHICLE_DECREW_VEHICLE_CREW_MP)
+		Cmd_Ability(squad_disembark_alpha_02.sgroup, ABILITY.AEF.VEHICLE_DECREW_MEDICS_MP)
+	end)
+	
+	-- Vehicle disembark [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_vehicle_disembark_bravo, "Don't report Sherman or Ambulance abandon")
+	local squad_disembark_bravo_01 = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.M4A3_SHERMAN_SQUAD_MP, player02, mkr_vehicle_disembark_bravo_01)
+	local squad_disembark_bravo_02 = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.DODGE_WC51_AMBULANCE_SQUAD_MP, player02, mkr_vehicle_disembark_bravo_02)
+	Util_Delay(1, function()
+		Cmd_Ability(squad_disembark_bravo_01.sgroup, ABILITY.AEF.VEHICLE_DECREW_VEHICLE_CREW_MP)
+		Cmd_Ability(squad_disembark_bravo_02.sgroup, ABILITY.AEF.VEHICLE_DECREW_MEDICS_MP)
+	end)
+
+	-- re-crewed AT Gun decrew vs. infantry [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_atgun_decrew_recrew_vs_infantry_alpha, "Report abandon of Pak40\nDon't report death of withdrawing squad")
+	local entity_recrew_alpha = ReplayEnhancements_SpawnAbandonedTeamWeapon(EBP.GERMAN.PAK40_75MM_AT_GUN_MP, mkr_atgun_decrew_recrew_vs_infantry_spawn_alpha_01)
+	local squad_recrew_alpha = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.PIONEER_SQUAD_MP, player01, mkr_atgun_decrew_recrew_vs_infantry_spawn_alpha_01)
+	local squad_decrew_recrewed_alpha = nil
+	Cmd_CaptureTeamWeapon(squad_recrew_alpha.sgroup, entity_recrew_alpha.egroup, false)
+	Util_Delay(3, function()
+		Squad_SetInvulnerable(squad_recrew_alpha.squad, true, 0)
+		Cmd_Move(squad_recrew_alpha.sgroup, World_Pos(0, 0, 0))
+		squad_decrew_recrewed_alpha = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.SHOCK_TROOPS_MP, player02, mkr_atgun_decrew_recrew_vs_infantry_spawn_alpha_02)
+	end)
+	
+	-- re-crewed AT Gun decrew vs. infantry [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_atgun_decrew_recrew_vs_infantry_bravo, "Report abandon of ZiS\nDon't report death of withdrawing squad")
+	local entity_recrew_bravo = ReplayEnhancements_SpawnAbandonedTeamWeapon(EBP.SOVIET.M1942_76MM_DIVISIONAL_GUN_ZIS_3_MP, mkr_atgun_decrew_recrew_vs_infantry_spawn_bravo_01)
+	local squad_recrew_bravo = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.COMBAT_ENGINEER_SQUAD_MP, player02, mkr_atgun_decrew_recrew_vs_infantry_spawn_bravo_01)
+	local squad_decrew_recrewed_bravo = nil
+	Cmd_CaptureTeamWeapon(squad_recrew_bravo.sgroup, entity_recrew_bravo.egroup, false)
+	Util_Delay(3, function()
+		Squad_SetInvulnerable(squad_recrew_bravo.squad, true, 0)
+		Cmd_Move(squad_recrew_bravo.sgroup, World_Pos(0, 0, 0))
+		squad_decrew_recrewed_bravo = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.PANZER_GRENADIER_SQUAD_MP, player01, mkr_atgun_decrew_recrew_vs_infantry_spawn_bravo_02)
+	end)
+
+	-- Vehicle with crew death [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_vehicle_with_crew_death_alpha, "Report death of Sherman and Ambulance\nDon't report death of vehicle crews")
+	local squad_vehicle_crew_death_alpha_01 = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.M4A3_SHERMAN_SQUAD_MP, player01, mkr_vehicle_with_crew_death_alpha_01)
+	local squad_vehicle_crew_death_alpha_02 = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.DODGE_WC51_AMBULANCE_SQUAD_MP, player01, mkr_vehicle_with_crew_death_alpha_02)
+	Util_Delay(2, function()
+		Squad_Kill(squad_vehicle_crew_death_alpha_01.squad)
+		Squad_Kill(squad_vehicle_crew_death_alpha_02.squad)
+	end)
+
+	-- Vehicle with crew death [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_vehicle_with_crew_death_bravo, "Report death of Sherman and Ambulance\nDon't report death of vehicle crews")
+	local squad_vehicle_crew_death_bravo_01 = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.M4A3_SHERMAN_SQUAD_MP, player01, mkr_vehicle_with_crew_death_bravo_01)
+	local squad_vehicle_crew_death_bravo_02 = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.DODGE_WC51_AMBULANCE_SQUAD_MP, player01, mkr_vehicle_with_crew_death_bravo_02)
+	Util_Delay(2, function()
+		Squad_Kill(squad_vehicle_crew_death_bravo_01.squad)
+		Squad_Kill(squad_vehicle_crew_death_bravo_02.squad)
+	end)
+
+	-- Vehicle with special crew death [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_special_vehicle_crew_death_alpha, "Report death of Sherman\nReport death of riflemen squad (special crew)")
+	local entity_special_vehicle_crew_alpha_01 = ReplayEnhancements_SpawnAbandonedTeamWeapon(EBP.AEF.M4A3_SHERMAN_MP, mkr_special_vehicle_crew_death_alpha_01)
+	local squad_special_vehicle_crew_alpha_02 = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.RIFLEMEN_SQUAD_MP, player01, mkr_special_vehicle_crew_death_alpha_02)
+	Util_Delay(3, function()
+		Command_SquadEntity(player01, squad_special_vehicle_crew_alpha_02.sgroup, SCMD_Recrew, entity_special_vehicle_crew_alpha_01.egroup, false)
+		Util_Delay(3, function()
+			-- Kill the squad that the newly created driver squad drives
+			SGroup_ForEach(Player_GetSquads(Squad_GetPlayerOwner(squad_special_vehicle_crew_alpha_02.squad)), function(_, _, squad)
+				local driver = Squad_GetVehicleMobileDriverSquad(squad)
+				if driver ~= nil and Squad_GetGameID(driver) == Squad_GetGameID(squad_special_vehicle_crew_alpha_02.squad) then
+					Squad_Kill(squad)
+				end
+			end)
+		end)
+	end)
+
+	-- Vehicle with special crew death [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_special_vehicle_crew_death_bravo, "Report death of Sherman\nReport death of riflemen squad (special crew)")
+	local entity_special_vehicle_crew_bravo_01 = ReplayEnhancements_SpawnAbandonedTeamWeapon(EBP.AEF.M4A3_SHERMAN_MP, mkr_special_vehicle_crew_death_bravo_01)
+	local squad_special_vehicle_crew_bravo_02 = ReplayEnhancements_CreateAndSpawnSquad(SBP.AEF.RIFLEMEN_SQUAD_MP, player02, mkr_special_vehicle_crew_death_bravo_02)
+	Util_Delay(3, function()
+		Command_SquadEntity(player02, squad_special_vehicle_crew_bravo_02.sgroup, SCMD_Recrew, entity_special_vehicle_crew_bravo_01.egroup, false)
+		Util_Delay(3, function()
+			-- Kill the squad that the newly created driver squad drives
+			SGroup_ForEach(Player_GetSquads(Squad_GetPlayerOwner(squad_special_vehicle_crew_bravo_02.squad)), function(_, _, squad)
+				local driver = Squad_GetVehicleMobileDriverSquad(squad)
+				if driver ~= nil and Squad_GetGameID(driver) == Squad_GetGameID(squad_special_vehicle_crew_bravo_02.squad) then
+					Squad_Kill(squad)
+				end
+			end)
+		end)
+	end)
+
+	-- Destruction of annihilation_condition entities [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_entity_annihilation_condition_alpha, "Report death of converted trucks")
+	local entity_annihilation_condition_alpha_01 = ReplayEnhancements_CreateAndSpawnEntity(EBP.WEST_GERMAN.INFANTRY_SUPPORT_MP, player01, mkr_entity_annihilation_condition_death_alpha_01)
+	local entity_annihilation_condition_alpha_02 = ReplayEnhancements_CreateAndSpawnEntity(EBP.WEST_GERMAN.HEAVY_ARMOR_SUPPORT_MP, player01, mkr_entity_annihilation_condition_death_alpha_02)
+	Util_Delay(4, function()
+		Entity_Kill(entity_annihilation_condition_alpha_01.entity)
+		Entity_Kill(entity_annihilation_condition_alpha_02.entity)
+	end)
+
+	-- Destruction of annihilation_condition entities [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_entity_annihilation_condition_bravo, "Report death of base buildings")
+	local entity_annihilation_condition_bravo_01 = ReplayEnhancements_CreateAndSpawnEntity(EBP.GERMAN.DOLCH_AKTIONEN_MP, player02, mkr_entity_annihilation_condition_death_bravo_01)
+	local entity_annihilation_condition_bravo_02 = ReplayEnhancements_CreateAndSpawnEntity(EBP.SOVIET.TANK_DEPOT_MP, player02, mkr_entity_annihilation_condition_death_bravo_02)
+	Util_Delay(5, function()
+		Entity_Kill(entity_annihilation_condition_bravo_01.entity)
+		Entity_Kill(entity_annihilation_condition_bravo_02.entity)
+	end)
+
+	-- Destruction of squad based emplacements [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_squad_based_emplacement_alpha, "Report death of Bofors and mortar pit")
+	local squad_based_emplacement_alpha_01 = ReplayEnhancements_CreateAndSpawnSquad(SBP.BRITISH.BRIT_BOFORS_40MM_AUTOCANNON_SQUAD_MP, player01, mkr_squad_based_emplacement_death_alpha_01)
+	local squad_based_emplacement_alpha_02 = ReplayEnhancements_CreateAndSpawnSquad(SBP.BRITISH.BRIT_3_INCH_MORTAR_TEAM_MP, player01, mkr_squad_based_emplacement_death_alpha_02)
+	Util_Delay(6, function()
+		Squad_Kill(squad_based_emplacement_alpha_01.squad)
+		Squad_Kill(squad_based_emplacement_alpha_02.squad)
+	end)
+
+	-- Destruction of squad based emplacements [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_squad_based_emplacement_bravo, "Report death of Bofors and mortar pit")
+	local squad_based_emplacement_bravo_01 = ReplayEnhancements_CreateAndSpawnSquad(SBP.GERMAN.PAK43_88MM_AT_GUN_SQUAD_MP, player02, mkr_squad_based_emplacement_death_bravo_01)
+	local squad_based_emplacement_bravo_02 = ReplayEnhancements_CreateAndSpawnSquad(SBP.WEST_GERMAN.FLAK_EMPLACEMENT, player02, mkr_squad_based_emplacement_death_bravo_02)
+	Util_Delay(7, function()
+		Squad_Kill(squad_based_emplacement_bravo_01.squad)
+		Squad_Kill(squad_based_emplacement_bravo_02.squad)
+	end)
+
+	ReplayEnhancements_DescribeTest(mkr_test_cancel_squad_based_emplacement_alpha, "Don't report death of cancelled Bofors")
+	EGroup_InstantCaptureStrategicPoint(eg_cancel_squad_based_emplacement_alpha_territories, player01)
+	local squad_cancel_emplacement_alpha_01 = ReplayEnhancements_CreateAndSpawnSquad(SBP.BRITISH.SAPPER_SQUAD_MP, player01, mkr_cancel_squad_based_emplacement_alpha_02)
+	Util_Delay(1, function()
+		Cmd_Construct(squad_cancel_emplacement_alpha_01.sgroup, EBP.BRITISH.BRIT_BOFORS_40MM_AUTOCANNON_MP, mkr_cancel_squad_based_emplacement_alpha_01, Util_GetPosition(mkr_cancel_squad_based_emplacement_alpha_02), false)
+
+		Util_Delay(8, function()
+			local sgroup = SGroup_Create("")
+			World_GetSquadsNearMarker(player01, sgroup, mkr_cancel_squad_based_emplacement_alpha_01, OT_Player)
+			SGroup_Filter(sgroup, SBP.BRITISH.BRIT_BOFORS_40MM_AUTOCANNON_SQUAD_MP, FILTER_KEEP)
+			Command_Squad(player01, sgroup, SCMD_Destroy, false)
+		end)
+	end)
+
+	ReplayEnhancements_DescribeTest(mkr_test_cancel_squad_based_emplacement_bravo, "Don't report death of cancelled Bofors")
+	EGroup_InstantCaptureStrategicPoint(eg_cancel_squad_based_emplacement_bravo_territories, player02)
+	local squad_cancel_emplacement_bravo_01 = ReplayEnhancements_CreateAndSpawnSquad(SBP.BRITISH.SAPPER_SQUAD_MP, player02, mkr_cancel_squad_based_emplacement_bravo_02)
+	Util_Delay(1, function()
+		Cmd_Construct(squad_cancel_emplacement_bravo_01.sgroup, EBP.BRITISH.BRIT_BOFORS_40MM_AUTOCANNON_MP, mkr_cancel_squad_based_emplacement_bravo_01, Util_GetPosition(mkr_cancel_squad_based_emplacement_bravo_02), false)
+		
+		Util_Delay(8, function()
+			local sgroup = SGroup_Create("")
+			World_GetSquadsNearMarker(player02, sgroup, mkr_cancel_squad_based_emplacement_bravo_01, OT_Player)
+			SGroup_Filter(sgroup, SBP.BRITISH.BRIT_BOFORS_40MM_AUTOCANNON_SQUAD_MP, FILTER_KEEP)
+			Command_Squad(player02, sgroup, SCMD_Destroy, false)
+		end)
+	end)
+
+	
+	-- Destruction of annihilation_condition entities [alpha]
+	ReplayEnhancements_DescribeTest(mkr_test_entity_non_annihilation_condition_alpha, "Don't report death of regular entities")
+	local entity_non_annihilation_condition_alpha_01 = ReplayEnhancements_CreateAndSpawnEntity(EBP.GERMAN.BUNKER_MP, player01, mkr_entity_non_annihilation_condition_death_alpha_01)
+	local entity_non_annihilation_condition_alpha_02 = ReplayEnhancements_CreateAndSpawnEntity(EBP.SOVIET.MACHINE_GUN_NEST_MP, player01, mkr_entity_non_annihilation_condition_death_alpha_02)
+	Util_Delay(4, function()
+		Entity_Kill(entity_non_annihilation_condition_alpha_01.entity)
+		Entity_Kill(entity_non_annihilation_condition_alpha_02.entity)
+	end)
+
+	-- Destruction of annihilation_condition entities [bravo]
+	ReplayEnhancements_DescribeTest(mkr_test_entity_non_annihilation_condition_bravo, "Don't report death of regular entities")
+	local entity_non_annihilation_condition_bravo_01 = ReplayEnhancements_CreateAndSpawnEntity(EBP.BRITISH.BRIT_FORWARD_HQ_MP, player02, mkr_entity_non_annihilation_condition_death_bravo_01)
+	local entity_non_annihilation_condition_bravo_02 = ReplayEnhancements_CreateAndSpawnEntity(EBP.AEF.FIGHTING_POSITION_MP, player02, mkr_entity_non_annihilation_condition_death_bravo_02)
+	Util_Delay(5, function()
+		Entity_Kill(entity_non_annihilation_condition_bravo_01.entity)
+		Entity_Kill(entity_non_annihilation_condition_bravo_02.entity)
+	end)
+
+	-- Anti-air player01
+	ReplayEnhancements_DescribeTest(mkr_spawn_antiair_player_01, "Don't report deaths of aircraft")
+	local squad_aa_alpha_01 = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.M5_HALFTRACK_SQUAD_MP, player01, mkr_spawn_antiair_player_01)
+	local squad_aa_alpha_02 = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.M5_HALFTRACK_SQUAD_MP, player01, mkr_spawn_antiair_player_01)
+	Cmd_InstantUpgrade(squad_aa_alpha_01.sgroup, UPG.SOVIET.M5_HALFTRACK_72K_AA_GUN_PACKAGE_MP, 1)
+	Cmd_InstantUpgrade(squad_aa_alpha_02.sgroup, UPG.SOVIET.M5_HALFTRACK_72K_AA_GUN_PACKAGE_MP, 1)
+	
+	-- Anti-air player02
+	ReplayEnhancements_DescribeTest(mkr_spawn_antiair_player_02, "Don't report deaths of aircraft")
+	local squad_aa_bravo_01 = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.M5_HALFTRACK_SQUAD_MP, player02, mkr_spawn_antiair_player_02)
+	local squad_aa_bravo_02 = ReplayEnhancements_CreateAndSpawnSquad(SBP.SOVIET.M5_HALFTRACK_SQUAD_MP, player02, mkr_spawn_antiair_player_02)
+	Cmd_InstantUpgrade(squad_aa_bravo_01.sgroup, UPG.SOVIET.M5_HALFTRACK_72K_AA_GUN_PACKAGE_MP, 1)
+	Cmd_InstantUpgrade(squad_aa_bravo_02.sgroup, UPG.SOVIET.M5_HALFTRACK_72K_AA_GUN_PACKAGE_MP, 1)
+	
+	ReplayEnhancements_AddAbility(ABILITY.GERMAN.STUKA_AIR_RECON, player01, World_Pos(0, 0, 0))
+	ReplayEnhancements_AddAbility(ABILITY.GERMAN.STUKA_AIR_RECON, player02, World_Pos(0, 0, 0))
+	
+	ReplayEnhancements_AddAbility(ABILITY.GERMAN.STUKA_SMOKE_BOMB, player01, World_Pos(0, 0, 0))
+	ReplayEnhancements_AddAbility(ABILITY.GERMAN.STUKA_SMOKE_BOMB, player02, World_Pos(0, 0, 0))	
+
+	Util_Delay(3, function()
+		Cmd_Ability(player01, ABILITY.GERMAN.STUKA_AIR_RECON, World_Pos(0, 0, 0), nil, true, false)
+		Cmd_Ability(player02, ABILITY.GERMAN.STUKA_AIR_RECON, World_Pos(0, 0, 0), nil, true, false)
+		Cmd_Ability(player01, ABILITY.GERMAN.STUKA_SMOKE_BOMB, World_Pos(0, 0, 0), World_Pos(1, 0, 1), true, false)
+		Cmd_Ability(player02, ABILITY.GERMAN.STUKA_SMOKE_BOMB, World_Pos(0, 0, 0), World_Pos(1, 0, 1), true, false)
+	end)
+end
+
+Rule_AddOneShot(ReplayEnhancementAutoTest_RunTests, 3)
