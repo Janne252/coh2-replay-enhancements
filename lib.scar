@@ -36,6 +36,15 @@ function Entity_GetPlayerOwnerDisplayName(entity)
 	end
 end
 
+function Item_GetPlayerOwnerDisplayName(item)
+	local item_type = scartype(item)
+	if item_type == ST_ENTITY then
+		return Entity_GetPlayerOwnerDisplayName(item)
+	elseif item_type == ST_SQUAD then
+		return Squad_GetPlayerOwnerDisplayName(item)
+	end
+end
+
 function Item_GetGameID(item)
 	local item_type = scartype(item)
 	if item_type == ST_SQUAD then
