@@ -1,5 +1,11 @@
 {
     "Lua.workspace.library": {
         "E:/dev/coh2/scar-reference-generator/output": true
-    }
+    },
+    "Lua.workspace.ignoreDir": [
+        ".vscode",
+        // Ignore tests scenario scar scripts.
+        // editing the tests scenario scar scripts will populate auto completion however
+        "tests/*"
+    ]
 }
