@@ -1,5 +1,11 @@
 # Changelog 
 
+## [0.3.0] - 2022-01-15
+- Fixed an issue where US Forces vehicles may in some situations still report default crew death
+- [WIP] Fixed squad based entities triggering death events on construction cancel (e.g. Bofors emplacement)
+- Added markers for `annihilation_condition` entity deaths (base buildings, converted OKW trucks, etc.)
+- Added _unit tests_ to re-create common in-game events for rapid testing
+
 ## [0.2.2] - 2022-01-11
 - Fixed non-ascii characters not being rendered properly (player names, unit names)
 - Mounted vehicle crew deaths are now ignored for standard vehicle crews:
