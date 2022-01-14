@@ -2,6 +2,7 @@
 function ReplayEnhancements_Init()
     Rule_Add(ReplayEnhancements_UpdateTick)
     Rule_AddGlobalEvent(ReplayEnhancements_OnSquadKilled, GE_SquadKilled)
+    Rule_AddGlobalEvent(ReplayEnhancements_OnEntityKilled, GE_EntityKilled)
     Rule_AddGlobalEvent(ReplayEnhancements_OnEntityAbandoned, GE_EntityAbandoned)
 end
 
@@ -103,6 +104,15 @@ end
 function ReplayEnhancements_OnSquadKilled(squad, causer)
     ReplayEnhancements_TryRegisterEvent(squad, causer, ReplayEnhancements.EventType.Killed)
     ReplayEnhancements_SetProperty(squad, "is_dead", true)
+    --Log(string.format("%s [%s] %s killed", scartype_tostring(squad), Squad_GetGameID(squad), Squad_GetBlueprintName(squad)))
+end
+
+function ReplayEnhancements_OnEntityKilled(entity, causer)
+    if Entity_IsOfType(entity, "annihilation_condition") then
+        ReplayEnhancements_TryRegisterEvent(entity, causer, ReplayEnhancements.EventType.Killed)
+        ReplayEnhancements_SetProperty(entity, "is_dead", true)
+        --Log(string.format("%s [%s] %s killed", scartype_tostring(entity), Entity_GetGameID(entity), Entity_GetBlueprintName(entity)))
+    end
 end
 
 function ReplayEnhancements_UpdateTick()
@@ -165,49 +175,58 @@ function ReplayEnhancements_UpdateTick()
     end
 end
 
----@param squad Squad
+---@param item Squad | Entity
 ---@param causer Squad | Entity | nil
 ---@param event SquadDeathEventType
-function ReplayEnhancements_TryRegisterEvent(squad, causer, event)
-    local id = Squad_GetGameID(squad)
-
-    -- Prevent reporting same squad twice
-    if ReplayEnhancements_GetProperty(squad, "is_reported") then
+function ReplayEnhancements_TryRegisterEvent(item, causer, event)
+    
+    -- Prevent reporting same target twice
+    if ReplayEnhancements_GetProperty(item, "is_reported") then
         return
     end
-    ReplayEnhancements_SetProperty(squad, "is_reported", true)
+    ReplayEnhancements_SetProperty(item, "is_reported", true)
 
-    -- Ignore all airplanes
-    if ReplayEnhancements_GetProperty(squad, "is_aircraft") then
-        --Log(string.format("[%s] is_aircraft", Squad_GetBlueprintName(squad)), "exit")
-        return
-    end
+    local item_type = scartype(item)
+    if item_type == ST_ENTITY then
 
-    -- Ignore squads that consist entirely of abandoned entities, i.e. squads created during team weapon abandons.
-    if Squad_IsRetreating(squad) and ReplayEnhancements_GetProperty(squad, "is_result_of_abandon") then
-        --Log(string.format("[%s] is_result_of_abandon", Squad_GetBlueprintName(squad)), "exit")
-        return
-    end
-
-    -- If the dead squad is a "standard" vehicle crew squad and its vehicle has died already
-    if ReplayEnhancements_GetProperty(squad, "is_active_vehicle_crew") then 
-        local vehicle_squad_id = ReplayEnhancements_GetProperty(squad, "vehicle_squad_id")
-        if vehicle_squad_id ~= nil and ReplayEnhancements["SQUAD"][vehicle_squad_id] ~= nil and ReplayEnhancements["SQUAD"][vehicle_squad_id].is_dead then
-            --Log(string.format("[%s] is_active_vehicle_crew", Squad_GetBlueprintName(squad)), "exit")
+    elseif item_type == ST_SQUAD then
+        -- Ignore all airplanes
+        if ReplayEnhancements_GetProperty(item, "is_aircraft") then
+            --Log(string.format("[%s] is_aircraft", Squad_GetBlueprintName(squad)), "exit")
             return
+        end
+
+        -- Ignore squads that consist entirely of abandoned entities, i.e. squads created during team weapon abandons.
+        if Squad_IsRetreating(item) and ReplayEnhancements_GetProperty(item, "is_result_of_abandon") then
+            --Log(string.format("[%s] is_result_of_abandon", Squad_GetBlueprintName(squad)), "exit")
+            return
+        end
+    
+        -- If the dead squad is a "standard" vehicle crew squad and its vehicle has died already
+        if ReplayEnhancements_GetProperty(item, "is_active_vehicle_crew") then 
+            local vehicle_squad_id = ReplayEnhancements_GetProperty(item, "vehicle_squad_id")
+            -- Driver + vehicle death order seems to vary; assume that dying driver with a previously known vehicle can be ignored
+            if vehicle_squad_id ~= nil and ReplayEnhancements["SQUAD"][vehicle_squad_id] ~= nil then
+                --Log(string.format("[%s] is_active_vehicle_crew", Squad_GetBlueprintName(squad)), "exit")
+                return
+            end
+        end
+
+        -- TODO fix bofors death event on cancel
+        -- Detection based on construction percentage? 
+
+        -- Abandons occur before death; see if the squad was actually abandoned
+        if ReplayEnhancements_GetProperty(item, "is_abandoned") then
+            event = ReplayEnhancements.EventType.Abandoned
         end
     end
 
-    -- Abandons occur before death; see if the squad was actually abandoned
-    if ReplayEnhancements_GetProperty(squad, "is_abandoned") then
-        event = ReplayEnhancements.EventType.Abandoned
-    end
-    
-    local owner = Squad_GetPlayerOwnerDisplayName(squad)
+
+    local owner = Item_GetPlayerOwnerDisplayName(item)
    
-    local position = Squad_GetPosition(squad)
-    local squadData = Item_ResolveDisplayInfo(squad)
-    local icon = squadData.icon_name
+    local position = Util_GetPosition(item)
+    local item_data = Item_ResolveDisplayInfo(item)
+    local icon = item_data.icon_name
     if icon == nil or icon == "" then 
         icon = "Icons_taskbar_hq_dead"
     end
@@ -219,18 +238,18 @@ function ReplayEnhancements_TryRegisterEvent(squad, causer, event)
     local title = Loc_FormatText(
         Util_CreateLocString("%1OWNER%\n%2NAME% (%3EVENT%)"),
         owner,
-        squadData.display_name_short,
+        item_data.display_name_short,
         event.label
     )
 
-    local portrait = squadData.icon
+    local portrait = item_data.icon
     if World_IsWinterMap() then
-        if squadData.portrait_icon_winter ~= nil and squadData.portrait_icon_winter ~= "" then
-            portrait = squadData.portrait_icon_winter
+        if item_data.portrait_icon_winter ~= nil and item_data.portrait_icon_winter ~= "" then
+            portrait = item_data.portrait_icon_winter
         end
     else
-        if squadData.portrait_icon_summer ~= nil and squadData.portrait_icon_summer ~= "" then
-            portrait = squadData.portrait_icon_summer
+        if item_data.portrait_icon_summer ~= nil and item_data.portrait_icon_summer ~= "" then
+            portrait = item_data.portrait_icon_summer
         end
     end
 
