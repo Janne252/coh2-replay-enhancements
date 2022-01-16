@@ -1,0 +1,397 @@
+
+function ReplayEnhancements_Init()
+    ReplayEnhancements_IncrementGameTick()
+    Rule_Add(ReplayEnhancements_UpdateTick)
+    Rule_AddGlobalEvent(ReplayEnhancements_OnSquadKilled, GE_SquadKilled)
+    Rule_AddGlobalEvent(ReplayEnhancements_OnEntityKilled, GE_EntityKilled)
+    Rule_AddGlobalEvent(ReplayEnhancements_OnEntityAbandoned, GE_EntityAbandoned)
+end
+
+---@class SquadDeathIndicator
+---@field position ScarPosition
+---@field display_ticks integer
+---@field hintpoint_id integer
+---@field event_id integer
+---@field map_icon_id integer
+---@field dr_frame string
+---@field threat_group_id integer
+---@field minimap_blip_id integer
+
+---@class SquadDeathEventType
+---@field name string
+---@field label string
+
+---@class SquadInfo
+---@field is_aircraft boolean
+---@field is_result_of_abandon boolean
+
+---@class EntityInfo
+---@field is_abandoned boolean
+---@field abandon_squad_id integer
+
+ReplayEnhancements = {
+    GameTick = 0,
+    ---@type SquadDeathIndicator[]
+    EventIndicators = {},
+    EventQueueClickCallbackPositions = {},
+    EventIndicatorDisplaySeconds = 60,
+    EventType = {
+        ---@type SquadDeathEventType
+        Abandoned = {
+            name = "abandoned",
+            label = "$11008113", -- Abandoned
+        },
+        ---@type SquadDeathEventType
+        Killed = {
+            name = "killed",
+            label = "$710029", -- Killed
+        },
+        ---@type SquadDeathEventType
+        Scuttled = {
+            name = "scuttled",
+            label = "$40846", -- Scuttle
+        },
+        ---@type SquadDeathEventType
+        TornDown = {
+            name = "torn-down",
+            label = "$11171596", -- Tear down emplacement
+        }
+    },
+    ---@type SquadInfo
+    ["SQUAD"] = {},
+    ---@type EntityInfo
+    ["ENTITY"] = {},
+}
+
+---@param item Squad | Entity
+---@param name string
+---@param value any
+function ReplayEnhancements_SetProperty(item, name, value)
+    local item_type = scartype_tostring(item)
+    local key = Item_GetGameID(item)
+    if ReplayEnhancements[item_type][key] == nil then
+        ReplayEnhancements[item_type][key] = {}
+    end
+    ReplayEnhancements[item_type][key][name] = value
+end
+
+---@param item Squad | Entity
+---@param name string
+---@param options table | nil
+function ReplayEnhancements_GetProperty(item, name, options)
+    options = options or {}
+    local item_type = scartype_tostring(item)
+    local key = Item_GetGameID(item)
+
+    if ReplayEnhancements[item_type][key] == nil or ReplayEnhancements[item_type][key][name] == nil then
+        return options.default
+    end
+
+    return ReplayEnhancements[item_type][key][name]
+end
+
+---@param entity Entity
+function ReplayEnhancements_OnEntityAbandoned(entity, some_boolean, causer)
+    local squad = Entity_GetSquad(entity)
+    local position = Entity_GetPosition(entity)
+
+    if squad ~= nil then
+        local squad_id = Squad_GetGameID(squad)
+        -- Display team weapon abandons immediately due to withdrawing crew members
+        if Squad_IsAnyEntityOfType(squad, {"team_weapon"}) then
+            ReplayEnhancements_TryRegisterEvent(squad, causer, ReplayEnhancements.EventType.Abandoned)
+        end
+        -- Mark squad as abandoned to prevent displaying both death and abandonment event
+        ReplayEnhancements_SetProperty(squad, "is_abandoned", true)
+        -- Mark squad entities as abandoned
+        for entity_index = 0, Squad_Count(squad) - 1 do
+            local squad_entity = Squad_EntityAt(squad, entity_index)
+            -- Vehicles and team weapons may get re-crewed and abandoned again
+            if not Entity_IsOfType(squad_entity, "vehicle") and not Entity_IsOfType(squad_entity, "team_weapon") then
+                ReplayEnhancements_SetProperty(squad_entity, "is_abandoned", true)
+                ReplayEnhancements_SetProperty(squad_entity, "abandon_squad_id", squad_id)
+            end
+        end
+    end
+end
+
+---@param squad Squad
+---@param ability Ability
+function ReplayEnhancements_OnSquadAbilityCompleted(squad, ability, target)
+    local squad_id = Squad_GetGameID(squad)
+    local ability_name = BP_GetName(ability)
+    -- Scuttle seems to lead to a death that is not triggering any game events
+    -- Scuttle cannot be cancelled, which is important because GE_AbilityCompleted triggers for abilities that cancel before all delayed actions complete
+    if ability_name == "scuttle_pak43_timed" then
+        ReplayEnhancements_TryRegisterEvent(squad, squad, ReplayEnhancements.EventType.Scuttled)
+    end
+    Debug_Log(string.format("%06d [%s] #%s %s completed ability %s on target type %s", ReplayEnhancements.GameTick, scartype_tostring(squad), Squad_GetGameID(squad), Squad_GetBlueprintName(squad), BP_GetName(ability), scartype_tostring(target)), "replay-enhancements.GE_AbilityComplete")
+end
+
+-- GE_SquadKilled is unusable for detecting what killed a squad; it seems to report last remaining entity?
+-- Should probably use GE_EntityKilled and track entity deaths and causers
+--- GE_SquadKilled 2nd argument seems to be last alive entity, its killer will be recorded by GE_EntityKilled
+--- However there is no good reference of what GE_SquadKilled 2nd argument is supposed to be. 
+-- CoH2 SCAR code base either references it as killer or doesn't declare the argument at all.
+--- Conclusion: All Squad deaths where death causer of the last entity should be ignored (self-caused deaths, i.e. cancel or programmatic kill)
+-- if build percentage > 0 < 1 then it can be differentiated as unfinished.
+---@param squad Squad
+function ReplayEnhancements_OnSquadKilled(squad, causer, third, fourth, fifth)
+    ReplayEnhancements_TryRegisterEvent(squad, causer, ReplayEnhancements.EventType.Killed)
+    Debug_Log(string.format("%06d %s was killed by %s", ReplayEnhancements.GameTick, Debug_ToString(squad), Debug_ToString(causer)), "deaths")
+end
+
+function ReplayEnhancements_OnEntityKilled(entity, causer)
+    ReplayEnhancements_TryRegisterEvent(entity, causer, ReplayEnhancements.EventType.Killed)
+    local squad = Entity_GetSquad(entity)
+    local squad_count = nil
+    if squad ~= nil then
+        squad_count = Squad_Count(squad)
+    end
+    Debug_Log(string.format("%06d %s (squad: %s, count: %s) was killed by %s", ReplayEnhancements.GameTick, Debug_ToString(entity), Debug_ToString(squad), tostring(squad_count), Debug_ToString(causer)), "deaths")
+end
+
+function ReplayEnhancements_IncrementGameTick()
+    ReplayEnhancements.GameTick = ReplayEnhancements.GameTick + 1
+end
+
+function ReplayEnhancements_UpdateTick()
+    ReplayEnhancements_IncrementGameTick()
+    -- Collect data from squads that cannot be obtained once they're dead
+    for player_index = 1, World_GetPlayerCount() do
+        local player = World_GetPlayerAt(player_index)
+        local eg_entities = Player_GetEntities(player)
+        local sg_squads = Player_GetSquads(player)
+         
+        EGroup_ForEach(eg_entities, function(_, _, entity)
+            local building_progress = Entity_GetBuildingProgress(entity)
+            ReplayEnhancements_SetProperty(entity, "is_under_construction", building_progress > 0 and building_progress < 1)
+        end)
+
+        -- Pre-step; reset some data that updates conditionally
+        SGroup_ForEach(sg_squads, function(_, _, squad)
+            if ReplayEnhancements_GetProperty(squad, "is_active_vehicle_crew") then
+                ReplayEnhancements_SetProperty(squad, "is_active_vehicle_crew", nil)
+                ReplayEnhancements_SetProperty(squad, "vehicle_squad_id", nil)
+            end
+            
+            -- One-time addition of all game event listeners
+            if not ReplayEnhancements_GetProperty(squad, "is_registered") then
+                ReplayEnhancements_SetProperty(squad, "is_registered", true)
+                Rule_AddSquadEvent(ReplayEnhancements_OnSquadAbilityCompleted, squad, GE_AbilityComplete)
+            end
+        end)
+
+        SGroup_ForEach(sg_squads, function(_, _, squad)
+            local squad_id = Squad_GetGameID(squad)
+            if Squad_IsAnyEntityOfType(squad, {"aircraft"}) then
+                ReplayEnhancements_SetProperty(squad, "is_aircraft", true)
+            end
+
+            local abandoned_crew_member_count = 0
+            local squad_size = Squad_Count(squad)
+            local is_under_construction = false
+
+            for entity_index = 0, squad_size - 1 do
+                local entity = Squad_EntityAt(squad, entity_index)
+                -- If the entity was part o abandoned squad and is now part of a different squad
+                if ReplayEnhancements_GetProperty(entity, "is_abandoned") == true and ReplayEnhancements_GetProperty(entity, "abandon_squad_id") ~= squad_id then
+                    abandoned_crew_member_count = abandoned_crew_member_count + 1
+                end
+                local building_progress = Entity_GetBuildingProgress(entity)
+                -- Any entity in a squad can enable this
+                -- This detects squad based emplacement cancel construction
+                -- This will also detect deaths of in-construction squad based entities but it's likely fine to ignore them
+                -- Even though technically the player did not get a (partial) refund because they didn't cancel it by themselves
+                if  building_progress > 0 and building_progress < 1 then
+                    is_under_construction = true
+                end
+            end
+            ReplayEnhancements_SetProperty(squad, "is_under_construction", is_under_construction)
+
+            -- Detect squad that has been created by team weapon abandon (the squad consists entirely of entities that have been marked as abandoned)
+            ReplayEnhancements_SetProperty(squad, "is_result_of_abandon", abandoned_crew_member_count == squad_size)
+
+            local driver_squad = Squad_GetVehicleMobileDriverSquad(squad)
+            if driver_squad ~= nil then
+                -- Mark the driver squad as vehicle crew in special circumstances
+                if 
+                    -- Standard US Forces vehicle crew
+                    Squad_IsAnyEntityOfType(driver_squad, {"aef_vehicle_crew"}) or
+                    -- Medics in an ambulance
+                    (Squad_GetBlueprintName(driver_squad) == "usf_medic_squad_mp" and Squad_GetBlueprintName(squad) == "dodge_wc51_ambulance_squad_mp")
+                then
+                    ReplayEnhancements_SetProperty(driver_squad, "is_active_vehicle_crew", true)
+                    ReplayEnhancements_SetProperty(driver_squad, "vehicle_squad_id", Squad_GetGameID(squad))
+                end
+            end
+        end)
+    end
+
+    for i = #ReplayEnhancements.EventIndicators, 1, -1 do
+        local item = ReplayEnhancements.EventIndicators[i]
+        item.display_ticks = item.display_ticks - 1
+
+        if item.display_ticks <= 0 then
+            ReplayEnhancements_RemoveEventIndicator(i)
+        end
+    end
+end
+
+---@param target Squad | Entity
+---@param causer Squad | Entity | nil
+---@param event SquadDeathEventType
+function ReplayEnhancements_TryRegisterEvent(target, causer, event)
+    -- Prevent reporting same target twice
+    if ReplayEnhancements_GetProperty(target, "is_reported") then
+        return
+    end
+
+    local item_type = scartype(target)
+    if item_type == ST_ENTITY then
+        -- Only track base buildings, converted OKW trucks, etc.
+        if not Entity_IsOfType(target, "annihilation_condition") then 
+            return
+        end
+
+        -- Ignore all events of unfinished constructions
+        -- This triggers for both player-issued "cancel construction" and the item being destroyed by something, e.g. an enemy unit
+        if ReplayEnhancements_GetProperty(target, "is_under_construction") then
+            Debug_Log(string.format("%06d [%s] %s is_under_construction", ReplayEnhancements.GameTick, scartype_tostring(target), Entity_GetBlueprintName(target)), "exit")
+            return
+        end
+
+    elseif item_type == ST_SQUAD then
+        -- Ignore all airplanes
+        if ReplayEnhancements_GetProperty(target, "is_aircraft") then
+            Debug_Log(string.format("%06d [%s] %s is_aircraft", ReplayEnhancements.GameTick, scartype_tostring(target), Squad_GetBlueprintName(target)), "exit")
+            return
+        end
+
+        -- Ignore squads that consist entirely of abandoned entities, i.e. squads created during team weapon abandons.
+        if Squad_IsRetreating(target) and ReplayEnhancements_GetProperty(target, "is_result_of_abandon") then
+            Debug_Log(string.format("%06d [%s] %s is_result_of_abandon", ReplayEnhancements.GameTick, scartype_tostring(target), Squad_GetBlueprintName(target)), "exit")
+            return
+        end
+    
+        -- If the dead squad is a "standard" vehicle crew squad and its vehicle has died already
+        if ReplayEnhancements_GetProperty(target, "is_active_vehicle_crew") then 
+            local vehicle_squad_id = ReplayEnhancements_GetProperty(target, "vehicle_squad_id")
+            -- Driver + vehicle death order seems to vary; assume that dying driver with a previously known vehicle can be ignored
+            if vehicle_squad_id ~= nil and ReplayEnhancements["SQUAD"][vehicle_squad_id] ~= nil then
+                Debug_Log(string.format("%06d [%s] %s is_active_vehicle_crew", ReplayEnhancements.GameTick, scartype_tostring(target), Squad_GetBlueprintName(target)), "exit")
+                return
+            end
+        end
+
+        -- Events of squads that contain entities with > 0 < 1 build progress percentage
+        -- are ignored. This affects all constructible entities that have construction_ext.on_construction_squad set
+        -- This triggers for both player-issued "cancel construction" and the item being destroyed by something, e.g. an enemy unit
+        if ReplayEnhancements_GetProperty(target, "is_under_construction") then
+            Debug_Log(string.format("%06d [%s] %s is_under_construction", ReplayEnhancements.GameTick, scartype_tostring(target), Squad_GetBlueprintName(target)), "exit")
+            return
+        end
+
+        -- Abandons occur before death; see if the squad was actually abandoned
+        -- Team weapon abandons are reported immediately, all other abandons wait for GE_SquadKilled event
+        if ReplayEnhancements_GetProperty(target, "is_abandoned") then
+            event = ReplayEnhancements.EventType.Abandoned
+        end
+    end
+
+    Debug_Log(string.format("%06d %s event <%s> causer %s", 
+        ReplayEnhancements.GameTick, 
+        Debug_ToString(target),
+        event.name,
+        Debug_ToString(causer)
+    ), "events")
+
+    -- Mark as reported after no exclusion rule triggered
+    ReplayEnhancements_SetProperty(target, "is_reported", true)
+
+    local owner = Item_GetPlayerOwnerDisplayName(target)
+    local position = Util_GetPosition(target)
+    local item_data = Item_ResolveDisplayInfo(target)
+    local icon = item_data.icon_name
+    if icon == nil or icon == "" then 
+        icon = "Icons_taskbar_hq_dead"
+    end
+    local map_icon = "Icons_taskbar_hq_dead"
+    local display_ticks = ReplayEnhancements.EventIndicatorDisplaySeconds * 8
+
+    -- Pass in other locstrings as $<number> references to preserve non-ascii characters (UCS-2 LE or UTF-16 LE)
+    local title = Loc_FormatText(
+        Util_CreateLocString("%1OWNER%\n%2NAME% (%3EVENT%)"),
+        owner,
+        item_data.display_name_short,
+        event.label
+    )
+
+    local portrait = item_data.icon
+    if World_IsWinterMap() then
+        if item_data.portrait_icon_winter ~= nil and item_data.portrait_icon_winter ~= "" then
+            portrait = item_data.portrait_icon_winter
+        end
+    else
+        if item_data.portrait_icon_summer ~= nil and item_data.portrait_icon_summer ~= "" then
+            portrait = item_data.portrait_icon_summer
+        end
+    end
+
+    -- No icon on the hintpoint; instead let ThreatArrow icon display
+    local hintpoint_id = HintPoint_Add(position, true, title, 0, HPAT_Bonus, "")
+    local event_id = UI_CreateEventCueClickable(icon, "", title, LOC(""), ReplayEnhancements_EventQueueClickCallback, 30, true)
+    local map_icon_id = MapIcon_CreatePosition(position, map_icon, 24, 255, 0, 0, 255)
+    local minimap_blip_id = UI_CreateMinimapBlip(position, ReplayEnhancements.EventIndicatorDisplaySeconds, BT_Reveal)
+
+    -- Each event has its own group to prevent simultaneous events from being displayed with just one arrow
+    local threat_group_id = ThreatGroup_Create()
+    ThreatArrow_Add(threat_group_id, position, icon)
+
+    table.insert(ReplayEnhancements.EventIndicators, {
+        display_ticks = display_ticks,
+        position = position,
+        hintpoint_id = hintpoint_id,
+        event_id = event_id,
+        map_icon_id = map_icon_id,
+        minimap_blip_id = minimap_blip_id,
+        threat_group_id = threat_group_id,
+    })
+    ReplayEnhancements.EventQueueClickCallbackPositions[event_id] = position
+end
+
+function ReplayEnhancements_RemoveClosestEventIndicator()
+    local position = Camera_GetCurrentTargetPos()
+    local closest_index = nil
+    local closest_distance = nil
+    for i = #ReplayEnhancements.EventIndicators, 1, -1 do
+        local item = ReplayEnhancements.EventIndicators[i]
+        local distance = World_DistancePointToPoint(position, item.position)
+        if closest_distance == nil or closest_distance > distance then
+            closest_index = i
+            closest_distance = distance
+        end
+    end
+
+    if closest_index ~= nil then
+        ReplayEnhancements_RemoveEventIndicator(closest_index)
+    end
+end
+
+function ReplayEnhancements_EventQueueClickCallback(id)
+    if scartype(ReplayEnhancements.EventQueueClickCallbackPositions[id]) == ST_SCARPOS then
+        Camera_MoveTo(ReplayEnhancements.EventQueueClickCallbackPositions[id])
+    end
+end
+
+function ReplayEnhancements_RemoveEventIndicator(index)
+    local item = ReplayEnhancements.EventIndicators[index]
+    HintPoint_Remove(item.hintpoint_id)
+    MapIcon_Destroy(item.map_icon_id)
+    ThreatArrow_Remove(item.threat_group_id, item.position)
+    ThreatGroup_Destroy(item.threat_group_id)
+    UI_DeleteMinimapBlip(item.minimap_blip_id)
+    table.remove(ReplayEnhancements.EventIndicators, index)
+end
+
+ReplayEnhancements_Init()

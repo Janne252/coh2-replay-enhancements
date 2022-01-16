@@ -1,29 +1,34 @@
+---@type ScarModule[]
+local modules = loadfile("replay-enhancements\\scar\\modules.scar")()
+
 local __replayenhancements = {
-    version = "0.3.0"
+    version = "0.3.0",
+    enable_debug = true,
 }
 
 -- init template
 -- dofile("replay-enhancements\\init.scar")
 function ReplayEnhancements_Init()
-    local files = {
-        "replay-enhancements\\data.cscar",
-        "replay-enhancements\\lib.scar",
-        "replay-enhancements\\api.scar",
-    }
     -- in-game SCAR VM
     if __replayenhancements_loader == "autotest" then
-        for _, filepath in ipairs(files) do
-            loadfile(filepath)()
+        for _, module in ipairs(modules) do
+            -- Tests load "common" and "tests" scopes
+            if module.scope == "mod" then
+                loadfile(module.filepath)()
+            end
         end
     -- in-game console SCAR VM
     else
-        for _, filepath in ipairs(files) do
-            -- Any string manipulation (catenation, string.format) seems to reduce escaped directory separators
-            Scar_DoString(string.format([[loadfile("%s")()]], filepath:gsub("\\", "\\\\")))
+        for _, module in ipairs(modules) do
+            if module.scope == "common" or module.scope == "mod" then
+                -- Any string manipulation (catenation, string.format) seems to reduce escaped directory separators
+                Scar_DoString(string.format([[loadfile("%s")()]], module.filepath:gsub("\\", "\\\\")))
+            end
         end
         bind("CONTROL+D", [[Scar_DoString("ReplayEnhancements_RemoveClosestEventIndicator()")]])
     end
     print(string.format("Replay enhancements version %s initialized!", __replayenhancements.version))
+    ENABLE_DEBUG = __replayenhancements.enable_debug
 end
 
 ReplayEnhancements_Init()

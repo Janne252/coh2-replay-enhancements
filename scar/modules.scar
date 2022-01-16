@@ -1,0 +1,6 @@
+return {
+    {filepath = "replay-enhancements\\scar\\common\\data.cscar", scope = "common"},
+    {filepath = "replay-enhancements\\scar\\common\\lib.scar", scope = "common"},
+    {filepath = "replay-enhancements\\scar\\testing\\lib.scar", scope = "tests"},
+    {filepath = "replay-enhancements\\scar\\api.scar", scope = "mod"},
+}

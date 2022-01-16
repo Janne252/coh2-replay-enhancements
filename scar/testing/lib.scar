@@ -1,0 +1,141 @@
+
+---@class TestDefinitionOptions
+---@field markers ScarMarker | ScarMarker[]
+---@field description string
+---@field focus boolean
+
+---@class TestDefinition : TestDefinitionOptions
+---@field markers ScarMarker[]
+---@field hintpoint_ids integer[]
+---@field callback function
+
+---@class TestCallbackContext
+---@field test TestDefinition
+---@field markerExists function
+---@field markerDoesNotExist function
+
+---@param options TestDefinitionOptions
+---@param callback fun(context: TestCallbackContext)
+function Test_Describe(options, callback)
+	local hintpoint_ids = {}
+	local description_locstring = Util_CreateLocString(options.description)
+	local markers = options.markers
+	if scartype(markers) == ST_MARKER then
+		markers = {markers}
+	end
+	for _, marker in ipairs(markers) do
+		table.insert(
+			hintpoint_ids, 
+			HintPoint_Add(marker, true, description_locstring, 4, HPAT_Hint)
+		)
+	end
+
+	table.insert(__TestRunner__UnitTests, {
+		markers = markers,
+		description = options.description,
+		focus = options.focus,
+		callback = callback,
+		hintpoint_ids = hintpoint_ids,
+	})
+end
+
+---@type TestDefinition[]
+__TestRunner__UnitTests = {}
+__TestRunner__Assert = {
+	markerExists = function() end,
+	markerDoesNotExist = function() end,
+}
+
+function TestRunner_Tick()
+	if #__TestRunner__UnitTests == 0 then
+		Rule_RemoveMe()
+		return
+	end
+
+	---@type TestDefinition
+	local test = table.remove(__TestRunner__UnitTests, 1)
+	test.callback({
+		test = test,
+		assert = __TestRunner__Assert,
+	})
+	if test.focus then
+		Camera_MoveTo(test.markers[1])
+	end
+end
+
+function TestRunner_Init()
+	FOW_Enable(false)
+	AI_EnableAll(false)
+	Camera_SetTuningValue(TV_DistMax, 1024)
+	for i = 1, World_GetPlayerCount() do
+		local player = World_GetPlayerAt(i)
+
+		Player_SetPopCapOverride(player, 1000)
+		Player_SetResource(player, RT_Manpower, 99999)
+		Player_SetResource(player, RT_Fuel, 99999)
+		Player_SetResource(player, RT_Munition, 99999)
+		Player_SetResource(player, RT_Command, 32)
+	end
+end
+
+function TestRunner_Start()
+	Rule_AddInterval(TestRunner_Tick, 0.25)
+end
+
+function Test_AddAndUnlockPlayerAbility(ability, player)
+	Player_AddAbility(player, ability)
+	Player_SetAbilityAvailability(player, ability, ITEM_UNLOCKED)
+end
+
+function Test_CreateAndSpawnSquad(sbp, player, pos, facing)
+	if facing == nil then
+		facing = pos
+	end
+	local sgroup = SGroup_Create("")
+	local driver_sgroup = nil
+	local squad = Squad_CreateAndSpawnToward(sbp, player, 0, Util_GetPosition(pos), Util_GetPosition(facing))
+	local driver_squad = Squad_GetVehicleMobileDriverSquad(squad)
+	
+	SGroup_Add(sgroup, squad)
+	if driver_squad ~= nil then
+		driver_sgroup = SGroup_Create("")
+		SGroup_Add(driver_sgroup, driver_squad)
+	end
+	return {
+		squad = squad,
+		sgroup = sgroup,
+		driver_squad = driver_squad,
+		driver_sgroup = driver_sgroup,
+	}
+end
+
+function Test_CreateAndSpawnEntity(ebp, player, pos, facing)
+	if facing == nil then
+		facing = pos
+	end
+	local egroup = EGroup_Create("")
+	local entity = Entity_Create(ebp, player, Util_GetPosition(pos), Util_GetPosition(facing))
+	Entity_Spawn(entity)
+	Entity_ForceConstruct(entity)
+	EGroup_Add(egroup, entity)
+	return {
+		entity = entity,
+		egroup = egroup,
+	}
+end
+
+function Test_SpawnAbandonedTeamWeapon(ebp, pos)
+	if scartype(pos) == ST_MARKER then
+		pos = Marker_GetPosition(pos)
+	end
+	local entity = Entity_CreateENV(ebp, pos, pos)
+	local egroup = EGroup_Create("")
+	EGroup_Add(egroup, entity)
+	Entity_Spawn(entity)
+	Cmd_CriticalHit(Game_GetLocalPlayer(), entity, CRIT.VEHICLE_ABANDON, 1)
+	return {
+		entity = entity,
+		egroup = egroup,
+	}
+end
+

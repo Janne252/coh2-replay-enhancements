@@ -24,8 +24,8 @@ HeaderInfo =
 		},
 		 
 		{
-			y = -96.40183,
-			x = 95.24826,
+			y = -96.23405,
+			x = -97.59392,
 			owner_id = 1001,
 			ebp_name = "starting_position_shared_territory",
 		},
@@ -45,17 +45,87 @@ HeaderInfo =
 		},
 		 
 		{
-			y = 126.11171,
-			x = -28.20536,
+			y = 100.63746,
+			x = -27.37365,
 			owner_id = 0,
 			ebp_name = "territory_point_command",
 		},
 		 
 		{
-			y = 89.84771,
-			x = -28.07507,
+			y = 67.85678,
+			x = -27.65861,
 			owner_id = 0,
 			ebp_name = "territory_point_command",
+		},
+		 
+		{
+			y = 35.23731,
+			x = -27.80158,
+			owner_id = 0,
+			ebp_name = "territory_point_command",
+		},
+		 
+		{
+			y = 2.54500,
+			x = -28.16384,
+			owner_id = 0,
+			ebp_name = "territory_point_command",
+		},
+		 
+		{
+			y = 2.91621,
+			x = -5.29962,
+			owner_id = 0,
+			ebp_name = "territory_point_mp",
+		},
+		 
+		{
+			y = 35.52427,
+			x = -4.91294,
+			owner_id = 0,
+			ebp_name = "territory_point_mp",
+		},
+		 
+		{
+			y = -29.56225,
+			x = -28.19119,
+			owner_id = 0,
+			ebp_name = "territory_point_command",
+		},
+		 
+		{
+			y = -29.33755,
+			x = -5.23182,
+			owner_id = 0,
+			ebp_name = "territory_point_mp",
+		},
+		 
+		{
+			y = -60.56190,
+			x = -27.78493,
+			owner_id = 0,
+			ebp_name = "territory_point_command",
+		},
+		 
+		{
+			y = -60.77796,
+			x = -5.77311,
+			owner_id = 0,
+			ebp_name = "territory_point_mp",
+		},
+		 
+		{
+			y = -92.99454,
+			x = -28.42613,
+			owner_id = 0,
+			ebp_name = "territory_point_command",
+		},
+		 
+		{
+			y = -92.76644,
+			x = -5.71417,
+			owner_id = 0,
+			ebp_name = "territory_point_mp",
 		},
 	},
 	default_skins =  

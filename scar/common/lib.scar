@@ -1,0 +1,186 @@
+ENABLE_DEBUG = false
+
+---@param squad Squad
+---@param entity_types string[]
+function Squad_IsAnyEntityOfType(squad, entity_types)
+	for i = 1, Squad_Count(squad) do
+        local entityIndex = i - 1
+		local entity = Squad_EntityAt(squad, entityIndex)
+		for _, entity_type in ipairs(entity_types) do
+			if Entity_IsOfType(entity, entity_type) then
+				return true
+			end
+		end
+	end	
+
+	return false
+end
+
+function Util_CreateLocString(text)
+	local tmpstr = LOC(text)
+	tmpstr[1] = text
+	return tmpstr
+end
+
+function Squad_GetPlayerOwnerDisplayName(squad)
+	if World_OwnsSquad(squad) then
+		return "$38100" -- World
+	else
+		return Player_GetDisplayName(Squad_GetPlayerOwner(squad))
+	end
+end
+
+function Entity_GetPlayerOwnerDisplayName(entity)
+	if World_OwnsEntity(entity) then
+		return "$38100" -- World
+	else
+		return Player_GetDisplayName(Entity_GetPlayerOwner(entity))
+	end
+end
+
+function Item_GetPlayerOwnerDisplayName(item)
+	local item_type = scartype(item)
+	if item_type == ST_ENTITY then
+		return Entity_GetPlayerOwnerDisplayName(item)
+	elseif item_type == ST_SQUAD then
+		return Squad_GetPlayerOwnerDisplayName(item)
+	end
+end
+
+function Item_GetGameID(item)
+	local item_type = scartype(item)
+	if item_type == ST_SQUAD then
+		return Squad_GetGameID(item)
+	elseif item_type == ST_ENTITY then
+		return Entity_GetGameID(item)
+	end
+end
+
+__util_delay__id = 0
+---@param delay number
+---@param callback function
+function Util_Delay(delay, callback)
+	local  taskName = "__util_delay_" .. __util_delay__id
+	_G[taskName] = function()
+		callback()
+		_G[taskName] = nil
+	end
+	Rule_AddOneShot(_G[taskName], delay)
+	__util_delay__id = __util_delay__id + 1
+end
+
+---@param ticks number
+---@param callback function
+function Util_DelayTicks(ticks, callback)
+	local seconds = 0
+	if ticks > 0 then seconds = ticks / 8 end
+	Util_Delay(seconds, callback)
+end
+
+---@class ItemDisplayInfo
+---@field blueprint_name string
+---@field icon string
+---@field screen_name integer
+---@field screen_name_short integer
+---@field display_name string
+---@field display_name_short string
+
+---@param item Squad | Entity
+---@return ItemDisplayInfo
+function Item_ResolveDisplayInfo(item)
+	options = options or {}
+
+	local item_type = scartype(item)
+	local blueprint
+	if item_type == ST_SQUAD then
+		blueprint = Squad_GetBlueprint(item)
+	elseif item_type == ST_ENTITY then
+		blueprint = Entity_GetBlueprint(item)
+	else
+		fatal(string.format("Unsupported item type %s", scartype_tostring(item)))
+	end
+
+	local blueprint_name = BP_GetName(blueprint)
+	local data = ReplayEnhancementsData[scartype_tostring(item)][blueprint_name] or {}
+
+	local display_name = Util_CreateLocString(blueprint_name)
+	local display_name_short = Util_CreateLocString(blueprint_name)
+
+	if data.screen_name ~= nil and data.screen_name ~= 0 then
+		display_name = string.format("$%s", data.screen_name)
+		display_name_short = string.format("$%s", data.screen_name)
+	end
+
+	if data.screen_name_short ~= nil and data.screen_name_short ~= 0 then
+		display_name_short = string.format("$%s", data.screen_name_short)
+	end
+
+	return {
+		blueprint_name = blueprint_name,
+		icon_name = data.icon_name,
+		symbol_icon_name = data.symbol_icon_name,
+		display_name = display_name,
+		display_name_short = display_name_short,
+		portrait_icon_summer = data.portrait_icon_summer,
+		portrait_icon_winter = data.portrait_icon_winter,
+	}
+end
+
+g_debug_log = {
+	default = "",
+}
+
+function Debug_Log(value, name, options)
+	if not ENABLE_DEBUG then
+		return
+	end
+	name = name or "default"
+	options = options or {}
+	local append = tostring(value) .. "\n"
+	g_debug_log[name] = (g_debug_log[name] or "") .. append
+	if options.truncate then
+		g_debug_log[name] = append
+	end
+	PersistentMode_SerializeResults(string.format("userdata:%s.%s.log.txt", "dev", name), g_debug_log[name])
+end
+
+function Squad_GetBlueprintName(squad)
+	return BP_GetName(Squad_GetBlueprint(squad))
+end
+
+function Entity_GetBlueprintName(entity)
+	return BP_GetName(Entity_GetBlueprint(entity))
+end
+
+function Item_GetBlueprintName(item)
+	local item_type = scartype(item)
+	if item_type == ST_SQUAD then
+		return Squad_GetBlueprintName(item)
+	elseif item_type == ST_ENTITY then
+		return Entity_GetBlueprintName(item)
+	elseif item_type == ST_PBG then
+		return BP_GetName(item)
+	end
+end
+
+function Debug_ToString(value)
+	local value_scartype = scartype(value)
+	local value_scartype_name = scartype_tostring(value)
+
+	local str_value = nil
+	if value_scartype == ST_PBG then
+		str_value = BP_GetName(value)
+	elseif value_scartype == ST_PLAYER then
+		str_value = Loc_ToAnsi(Player_GetDisplayName(value))
+	elseif value_scartype == ST_SQUAD then
+		str_value = string.format("[%s] %s", Squad_GetGameID(value), BP_GetName(Squad_GetBlueprint(value)))
+	elseif value_scartype == ST_ENTITY then
+		str_value = string.format("[%s] %s", Entity_GetGameID(value), BP_GetName(Entity_GetBlueprint(value)))
+	-- Shorter than displaying the table hash
+	elseif value_scartype == ST_TABLE then
+		str_value = "<table>"
+	else
+		str_value = tostring(value)
+	end
+	return string.format("<%s> %s", value_scartype_name, str_value)
+end

@@ -1,0 +1,3 @@
+---@class ScarModule
+---@field filepath string
+---@field scope string
