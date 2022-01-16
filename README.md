@@ -22,14 +22,5 @@
 1. Close the in-game console (same hotkey as the one used to open the in-game console)
 1. Unpause the game
 
-# Primary test replay 
-- [x] Infantry squad deaths
-- [x] HMG team weapon death
-- [x] AT gun team weapon death and retreating team weapon member death
-- [x] Vehicle death
-- [x] Vehicle abandon 
-- [x] Aircraft death
-
-
 # License
 - See [LICENSE.txt](LICENSE.txt)
