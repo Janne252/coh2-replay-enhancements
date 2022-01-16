@@ -1,10 +1,16 @@
 # Changelog 
 
-## [0.3.0] - 2022-01-15
+## [WIP] [0.3.0] - 2022-01-16
 - Fixed an issue where US Forces vehicles may in some situations still report default crew death
-- [WIP] Fixed squad based entities triggering death events on construction cancel (e.g. Bofors emplacement)
+- Fixed Pak43 scuttle not being detected
+- Fixed squad based entities triggering death events on construction cancel (e.g. Bofors emplacement)
 - Added markers for `annihilation_condition` entity deaths (base buildings, converted OKW trucks, etc.)
 - Added _unit tests_ to re-create common in-game events for rapid testing
+- Known issues
+    - Destruction of unfinished emplacements are ignored (both cancel and destruction)
+    - Destruction of unfinished `annihilation_condition` (base buildings, converted OKW trucks, etc.) are ignored (both cancel and destruction)
+    - British "Tear down emplacement" is being detected as a death
+
 
 ## [0.2.2] - 2022-01-11
 - Fixed non-ascii characters not being rendered properly (player names, unit names)
