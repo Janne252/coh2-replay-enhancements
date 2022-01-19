@@ -1,9 +1,12 @@
 ---@type ScarModule[]
 local modules = loadfile("replay-enhancements\\scar\\modules.scar")()
 
-local __replayenhancements = {
+-- Will be passed to runtime. Bit of repetition and the data passing could be more sophisticated
+-- instead of constructing raw assignment statements but it's fine for now.
+local __replayenhancements_settings = {
     version = "0.3.0",
     enable_debug = true,
+    event_indicator_display_seconds = 60,
 }
 
 -- init template
@@ -17,6 +20,9 @@ function ReplayEnhancements_Init()
                 loadfile(module.filepath)()
             end
         end
+        ENABLE_DEBUG = __replayenhancements_settings.enable_debug
+        ReplayEnhancements.Version = __replayenhancements_settings.version
+        ReplayEnhancements.EventIndicatorDisplaySeconds = __replayenhancements_settings.event_indicator_display_seconds
     -- in-game console SCAR VM
     else
         for _, module in ipairs(modules) do
@@ -25,10 +31,18 @@ function ReplayEnhancements_Init()
                 Scar_DoString(string.format([[loadfile("%s")()]], module.filepath:gsub("\\", "\\\\")))
             end
         end
+
+        Scar_DoString(string.format([[ENABLE_DEBUG = %s]], tostring(__replayenhancements_settings.enable_debug)))
+        Scar_DoString(string.format([[ReplayEnhancements.Version = "%s"]], __replayenhancements_settings.version))
+        Scar_DoString(string.format([[ReplayEnhancements.EventIndicatorDisplaySeconds = %s]], __replayenhancements_settings.event_indicator_display_seconds))
+
         bind("CONTROL+D", [[Scar_DoString("ReplayEnhancements_RemoveClosestEventIndicator()")]])
     end
-    print(string.format("Replay enhancements version %s initialized!", __replayenhancements.version))
-    ENABLE_DEBUG = __replayenhancements.enable_debug
+    
+    print(string.format("Replay enhancements version %s initialized!", __replayenhancements_settings.version))
+    if __replayenhancements_settings.enable_debug then
+        print("Debugging is enabled!")
+    end
 end
 
 ReplayEnhancements_Init()
