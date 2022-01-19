@@ -31,6 +31,7 @@ end
 ---@field abandon_squad_id integer
 
 ReplayEnhancements = {
+    Version = "",
     GameTick = 0,
     ---@type EventIndicator[]
     EventIndicators = {},
@@ -126,7 +127,6 @@ function ReplayEnhancements_OnSquadAbilityCompleted(squad, ability, target)
     if ability_name == "scuttle_pak43_timed" then
         ReplayEnhancements_TryRegisterEvent(squad, squad, ReplayEnhancements.EventType.Scuttled)
     end
-    Debug_Log(string.format("%06d [%s] #%s %s completed ability %s on target type %s", ReplayEnhancements.GameTick, scartype_tostring(squad), Squad_GetGameID(squad), Squad_GetBlueprintName(squad), BP_GetName(ability), scartype_tostring(target)), "replay-enhancements.GE_AbilityComplete")
 end
 
 --- GE_SquadKilled 2nd argument seems to be last alive entity, its killer will be recorded by GE_EntityKilled
@@ -152,12 +152,7 @@ function ReplayEnhancements_OnEntityKilled(entity, causer)
         ReplayEnhancements_SetProperty(entity, "death_causer_id", Entity_GetGameID(causer))
     end
     ReplayEnhancements_TryRegisterEvent(entity, causer, ReplayEnhancements.EventType.Killed)
-    local squad = Entity_GetSquad(entity)
-    local squad_count = nil
-    if squad ~= nil then
-        squad_count = Squad_Count(squad)
-    end
-    Debug_Log(string.format("%06d %s (squad: %s, count: %s) was killed by %s", ReplayEnhancements.GameTick, Debug_ToString(entity), Debug_ToString(squad), tostring(squad_count), Debug_ToString(causer)), "deaths")
+    Debug_Log(string.format("%06d %s was killed by %s", ReplayEnhancements.GameTick, Debug_ToString(entity), Debug_ToString(causer)), "deaths")
 end
 
 function ReplayEnhancements_IncrementGameTick()
