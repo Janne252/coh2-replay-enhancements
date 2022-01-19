@@ -1,0 +1,4 @@
+return {
+    enable_debug = false,
+    event_indicator_display_seconds = 60,
+}
