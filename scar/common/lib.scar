@@ -44,6 +44,8 @@ function Item_GetPlayerOwnerDisplayName(item)
 		return Entity_GetPlayerOwnerDisplayName(item)
 	elseif item_type == ST_SQUAD then
 		return Squad_GetPlayerOwnerDisplayName(item)
+	else
+		fatal(string.format("Unsupported Item_GetPlayerOwnerDisplayName item type %s", scartype_tostring(item)))
 	end
 end
 
@@ -53,6 +55,8 @@ function Item_GetGameID(item)
 		return Squad_GetGameID(item)
 	elseif item_type == ST_ENTITY then
 		return Entity_GetGameID(item)
+	else
+		fatal(string.format("Unsupported Item_GetGameID item type %s", scartype_tostring(item)))
 	end
 end
 
@@ -184,3 +188,28 @@ function Debug_ToString(value)
 	end
 	return string.format("<%s> %s", value_scartype_name, str_value)
 end
+
+---Returns the first non-nil value.
+---@vararg any[]
+---@return any
+function Util_FirstNonNil(...)
+	local args = table.pack(...)
+	for i = 1, args.n do
+		local value = args[i]
+		if value ~= nil then
+			return value
+		end
+	end
+
+	return nil
+end
+
+
+function table.pack(...)
+    return { n = select('#', ...), ... }
+end
+
+table.unpack = unpack;
+
+-- SCARTYPE_LOCSTRING seems to be something different
+ST_LOCSTRING = scartype(LOC(""))
