@@ -3,6 +3,7 @@
 ---@field markers ScarMarker | ScarMarker[]
 ---@field description string
 ---@field focus boolean
+---@field only boolean
 
 ---@class TestDefinition : TestDefinitionOptions
 ---@field markers ScarMarker[]
@@ -30,30 +31,37 @@ function Test_Describe(options, callback)
 		)
 	end
 
+	if options.only == true then
+		__TestRunner__queue_filtered = true
+	end
 	table.insert(__TestRunner__UnitTests, {
 		markers = markers,
 		description = options.description,
 		focus = options.focus,
+		only = options.only,
 		callback = callback,
 		hintpoint_ids = hintpoint_ids,
 	})
 end
 
+__TestRunner__queue_filtered = false
 ---@type TestDefinition[]
 __TestRunner__UnitTests = {}
+---@type TestDefinition[]
+__TestRunner__UnitTestsRunQueue = {}
 __TestRunner__Assert = {
 	markerExists = function() end,
 	markerDoesNotExist = function() end,
 }
 
 function TestRunner_Tick()
-	if #__TestRunner__UnitTests == 0 then
+	if #__TestRunner__UnitTestsRunQueue == 0 then
 		Rule_RemoveMe()
 		return
 	end
 
 	---@type TestDefinition
-	local test = table.remove(__TestRunner__UnitTests, 1)
+	local test = table.remove(__TestRunner__UnitTestsRunQueue, 1)
 	test.callback({
 		test = test,
 		assert = __TestRunner__Assert,
@@ -79,6 +87,13 @@ function TestRunner_Init()
 end
 
 function TestRunner_Start()
+	__TestRunner__UnitTestsRunQueue = {}
+	-- Whether or not to only queue tests with only = true
+	for _, test in ipairs(__TestRunner__UnitTests) do
+		if (test.only and __TestRunner__queue_filtered) or not __TestRunner__queue_filtered then
+			table.insert(__TestRunner__UnitTestsRunQueue, test)
+		end
+	end
 	Rule_AddInterval(TestRunner_Tick, 0.25)
 end
 
