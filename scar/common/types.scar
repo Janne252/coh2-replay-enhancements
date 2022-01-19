@@ -3,6 +3,5 @@
 ---@field scope string
 
 ---@class ReplayEnhancementsConfig
----@field version string
 ---@field enable_debug boolean
 ---@field event_indicator_display_seconds integer

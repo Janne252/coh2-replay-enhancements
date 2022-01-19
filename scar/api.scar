@@ -34,7 +34,6 @@ end
 ---@field abandon_squad_id integer
 
 ReplayEnhancements = {
-    Version = config.version,
     GameTick = 0,
     ---@type EventIndicator[]
     EventIndicators = {},
