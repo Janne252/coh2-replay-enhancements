@@ -33,5 +33,13 @@ _None at the moment_
         - The replay (`.rec`) file
         - Screenshot/timestamp of the error
 
+# Configuration
+The following options can be changed by editing `config.scar` with a text editor:
+
+| Option                            | Description                                                                 | Default value  |
+|-----------------------------------|-----------------------------------------------------------------------------|----------------|
+| `event_indicator_display_seconds` | Event (death, abandon, etc.) indicator display time in seconds.             | `60`           |
+
+
 # License
 - See [LICENSE.txt](LICENSE.txt)
