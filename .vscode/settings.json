@@ -7,5 +7,6 @@
         // Ignore tests scenario scar scripts.
         // editing the tests scenario scar scripts will populate auto completion however
         "tests/*"
-    ]
+    ],
+    "Lua.runtime.version": "Lua 5.1"
 }
