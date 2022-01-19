@@ -359,14 +359,19 @@ function ReplayEnhancements_TryRegisterEvent(target, causer, event, overrides)
     end
     local map_icon = "Icons_taskbar_hq_dead"
     local display_ticks = ReplayEnhancements.EventIndicatorDisplaySeconds * 8
-   
+    
+    local owner_display_name_raw
     if scartype(owner_display_name) == ST_LOCSTRING then
-        owner_display_name = owner_display_name[1]
+        owner_display_name_raw = owner_display_name[1]
+    else 
+        owner_display_name_raw = owner_display_name
     end
-    -- If the player name contains $ characters, replace them with capital S (closest match)
-    -- convert it back to a locstring
-    owner_display_name = Util_CreateLocString(string.gsub(owner_display_name, "%$", "S"))
-
+    -- Mutate player name only if it contains unsupported characters
+    if string.find(owner_display_name_raw, "%$") then
+        -- If the player name contains $ characters, replace them with capital S (closest match)
+        -- convert it back to a locstring
+        owner_display_name = Util_CreateLocString(string.gsub(owner_display_name_raw, "%$", "S"))
+    end
 
     -- Pass in other locstrings as $<number> references to preserve non-ascii characters (UCS-2 LE or UTF-16 LE)
     local title = Loc_FormatText(Util_CreateLocString("%1$%\n%2$% (%3EVENT%)"),
