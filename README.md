@@ -22,5 +22,16 @@
 1. Close the in-game console (same hotkey as the one used to open the in-game console)
 1. Unpause the game
 
+# Known issues
+_None at the moment_
+
+# Troubleshooting
+- `Fatal Scar Error - Execution Paused` message during replay playback
+    - Try unpausing the game to continue
+    - Open a new [issue](https://github.com/Janne252/coh2-replay-enhancements/issues) and attach/include:
+        - Version number (displayed in the console after initializing the tool)
+        - The replay (`.rec`) file
+        - Screenshot/timestamp of the error
+
 # License
 - See [LICENSE.txt](LICENSE.txt)
