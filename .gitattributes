@@ -1,1 +1,5 @@
 *.scar linguist-language=Lua
+*.info linguist-language=Lua
+*.options linguist-language=Lua
+*.prefabdata linguist-language=Lua
+*.mod linguist-language=Xml
