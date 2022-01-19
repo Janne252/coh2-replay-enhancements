@@ -1,3 +1,6 @@
+---@type ReplayEnhancementsConfig
+local config = loadfile("replay-enhancements\\config.scar")()
+ENABLE_DEBUG = config.enable_debug
 
 function ReplayEnhancements_Init()
     ReplayEnhancements_IncrementGameTick()
@@ -31,12 +34,12 @@ end
 ---@field abandon_squad_id integer
 
 ReplayEnhancements = {
-    Version = "",
+    Version = config.version,
     GameTick = 0,
     ---@type EventIndicator[]
     EventIndicators = {},
     EventQueueClickCallbackPositions = {},
-    EventIndicatorDisplaySeconds = 60,
+    EventIndicatorDisplaySeconds = config.event_indicator_display_seconds,
     EventType = {
         ---@type SquadDeathEventType
         Abandoned = {
