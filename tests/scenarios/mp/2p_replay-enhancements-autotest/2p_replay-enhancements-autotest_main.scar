@@ -1,5 +1,5 @@
 local modes = {Live = "live", RecordReplay = "record-replay"}
-local mode = modes.RecordReplay
+local mode = modes.Live
 
 function ReplayEnhancementsAutoTest_Init()
 	---@type ScarModule[]
@@ -50,6 +50,37 @@ function ReplayEnhancementsAutoTest_SetupTests()
 	local player01 = World_GetPlayerAt(1)
 	local player02 = World_GetPlayerAt(2)
 
+	Test_Describe({description = "Don't report goliath death\nReport goliath victim death", markers =  mkr_test_death_by_goliath_alpha, focus = true, only = true}, function(context)
+		local goliath = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.GOLIATH_MP, player01, mkr_death_by_goliath_alpha_spawn)
+		local victim = Test_CreateAndSpawnSquad(SBP.SOVIET.SNIPER_TEAM_MP, player02, Util_GetOffsetPosition(mkr_death_by_goliath_alpha_spawn, OFFSET_FRONT, 1))
+		Util_Delay(1, function()
+			Command_SquadAbility(player01, goliath.sgroup,ABILITY.GERMAN.GOLIATH_SELF_DESTRUCT_MP, true, false)
+		end)
+	end)
+	Test_Describe({description = "Don't report killed goliath death?\nReport goliath victim death", markers =  mkr_test_death_by_goliath_bravo, focus = true, only = true}, function(context)
+		local goliath = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.GOLIATH_MP, player01, mkr_death_by_goliath_bravo_spawn)
+		Squad_SetHealth(goliath.squad, 0.01)
+		local victim = Test_CreateAndSpawnSquad(SBP.BRITISH.SNIPER_BRITISH_SQUAD_MP, player02, Util_GetOffsetPosition(mkr_death_by_goliath_bravo_spawn, OFFSET_FRONT, 1))
+		Cmd_Attack(victim.sgroup, goliath.sgroup, false)
+	end)
+
+	Test_Describe({description = "Report death by airstrike (player-owned projectile entities)", markers = mkr_test_death_by_airstrike_alpha, only = true}, function(context)
+		local victim = Test_CreateAndSpawnSquad(SBP.SOVIET.SNIPER_TEAM_MP, player02, mkr_death_by_airstrike_alpha_spawn)
+		Util_Delay(1, function()
+			Test_AddAndUnlockPlayerAbility(ABILITY.GERMAN.STUKA_BOMBING_STRIKE, player01)
+			Cmd_Ability(player01, ABILITY.GERMAN.STUKA_BOMBING_STRIKE, Util_GetPosition(mkr_death_by_airstrike_alpha_spawn), nil, true, false)
+		end)
+	end)
+
+	Test_Describe({description = "Report death by airstrike (neutral owned projectile entities)", markers = mkr_test_death_by_airstrike_bravo, only = true}, function(context)
+		local victim = Test_CreateAndSpawnSquad(SBP.SOVIET.SNIPER_TEAM_MP, player02, mkr_death_by_airstrike_bravo_spawn)
+		Util_Delay(1, function()
+			Test_AddAndUnlockPlayerAbility(ABILITY.GERMAN.STUKA_FRAGMENTATION_BOMB, player01)
+			-- Likely has a small chance of missing?
+			Cmd_Ability(player01, ABILITY.GERMAN.STUKA_FRAGMENTATION_BOMB, Util_GetPosition(mkr_death_by_airstrike_bravo_spawn), Util_GetPosition(mkr_test_death_by_airstrike_alpha), true, false)
+			Cmd_Ability(player01, ABILITY.GERMAN.STUKA_FRAGMENTATION_BOMB, Util_GetPosition(mkr_death_by_airstrike_bravo_spawn), Util_GetPosition(mkr_test_death_by_airstrike_bravo), true, false)
+		end)
+	end)
 	Test_Describe({description = "Player name containing $\nPlayer name without $\nNon-ascii char player names", markers = mkr_test_miscellaneous}, function (context)
 		local raketen_01 = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.RAKETENWERFER43_88MM_PUPPCHEN_ANTITANK_GUN_SQUAD_MP, player02, mkr_miscellaneous_01)
 		local raketen_02 = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.RAKETENWERFER43_88MM_PUPPCHEN_ANTITANK_GUN_SQUAD_MP, player02, mkr_miscellaneous_02)
@@ -415,7 +446,7 @@ function ReplayEnhancementsAutoTest_SetupTests()
 	end)
 
 	-- Death of unfinished OKW truck conversion
-	Test_Describe({description = "Report death of unfinished conversion?", markers = mkr_test_kill_okw_truck_conversion, focus = true}, function(context)
+	Test_Describe({description = "Report death of unfinished conversion?", markers = mkr_test_kill_okw_truck_conversion}, function(context)
 		EGroup_InstantCaptureStrategicPoint(eg_kill_okw_truck_conversion_territories, player01)
 		local squad_sws = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.SWS_HALFTRACK_SQUAD_MP, player01, mkr_kill_okw_truck_conversion_target)
 		Command_SquadPosAbility(player01, squad_sws.sgroup, Util_GetPosition(mkr_kill_okw_truck_conversion_target), ABILITY.WEST_GERMAN.CONSTRUCT_TANK_COMMAND, true, false)
