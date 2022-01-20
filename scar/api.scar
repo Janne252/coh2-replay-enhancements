@@ -146,7 +146,7 @@ function ReplayEnhancements_OnSquadKilled(squad, last_entity)
         end
     end
     ReplayEnhancements_TryRegisterEvent(squad, causer, ReplayEnhancements.EventType.Killed)
-    Debug_Log(string.format("%06d %s was killed by %s", ReplayEnhancements.GameTick, Debug_ToString(squad), Debug_ToString(causer)), "deaths")
+    --Debug_Log(string.format("%06d %s was killed by %s", ReplayEnhancements.GameTick, Debug_ToString(squad), Debug_ToString(causer)), "deaths")
 end
 
 function ReplayEnhancements_OnEntityKilled(entity, causer)
@@ -154,7 +154,7 @@ function ReplayEnhancements_OnEntityKilled(entity, causer)
         ReplayEnhancements_SetProperty(entity, "death_causer_id", Entity_GetGameID(causer))
     end
     ReplayEnhancements_TryRegisterEvent(entity, causer, ReplayEnhancements.EventType.Killed)
-    Debug_Log(string.format("%06d %s was killed by %s", ReplayEnhancements.GameTick, Debug_ToString(entity), Debug_ToString(causer)), "deaths")
+    --Debug_Log(string.format("%06d %s was killed by %s", ReplayEnhancements.GameTick, Debug_ToString(entity), Debug_ToString(causer)), "deaths")
 end
 
 function ReplayEnhancements_IncrementGameTick()
@@ -306,13 +306,13 @@ function ReplayEnhancements_TryRegisterEvent(target, causer, event, overrides)
     elseif item_type == ST_SQUAD then
         -- Ignore all airplanes
         if ReplayEnhancements_GetProperty(target, "is_aircraft") then
-            Debug_Log(string.format("%06d [%s] %s is_aircraft", ReplayEnhancements.GameTick, scartype_tostring(target), Squad_GetBlueprintName(target)), "exit")
+            --Debug_Log(string.format("%06d [%s] %s is_aircraft", ReplayEnhancements.GameTick, scartype_tostring(target), Squad_GetBlueprintName(target)), "exit")
             return
         end
 
         -- Ignore squads that consist entirely of abandoned entities, i.e. squads created during team weapon abandons.
         if Squad_IsRetreating(target) and ReplayEnhancements_GetProperty(target, "is_result_of_abandon") then
-            Debug_Log(string.format("%06d [%s] %s is_result_of_abandon", ReplayEnhancements.GameTick, scartype_tostring(target), Squad_GetBlueprintName(target)), "exit")
+            --Debug_Log(string.format("%06d [%s] %s is_result_of_abandon", ReplayEnhancements.GameTick, scartype_tostring(target), Squad_GetBlueprintName(target)), "exit")
             return
         end
     
@@ -321,7 +321,7 @@ function ReplayEnhancements_TryRegisterEvent(target, causer, event, overrides)
             local vehicle_squad_id = ReplayEnhancements_GetProperty(target, "vehicle_squad_id")
             -- Driver + vehicle death order seems to vary; assume that dying driver with a previously known vehicle can be ignored
             if vehicle_squad_id ~= nil and ReplayEnhancements["SQUAD"][vehicle_squad_id] ~= nil then
-                Debug_Log(string.format("%06d [%s] %s is_default_vehicle_crew", ReplayEnhancements.GameTick, scartype_tostring(target), Squad_GetBlueprintName(target)), "exit")
+                --Debug_Log(string.format("%06d [%s] %s is_default_vehicle_crew", ReplayEnhancements.GameTick, scartype_tostring(target), Squad_GetBlueprintName(target)), "exit")
                 return
             end
         end
@@ -343,16 +343,11 @@ function ReplayEnhancements_TryRegisterEvent(target, causer, event, overrides)
         and event ~= ReplayEnhancements.EventType.Abandoned 
         and not ReplayEnhancements_GetProperty(target, "is_vehicle_crew")
     then
-        Debug_Log(string.format("%06d [%s] %s causer is NIL", ReplayEnhancements.GameTick, scartype_tostring(target), Item_GetBlueprintName(target)), "exit")
+        --Debug_Log(string.format("%06d [%s] %s causer is NIL", ReplayEnhancements.GameTick, scartype_tostring(target), Item_GetBlueprintName(target)), "exit")
         return
     end
 
-    Debug_Log(string.format("%06d %s event <%s> causer %s", 
-        ReplayEnhancements.GameTick, 
-        Debug_ToString(target),
-        event.name,
-        Debug_ToString(causer)
-    ), "events")
+    --Debug_Log(string.format("%06d %s event <%s> causer %s",  ReplayEnhancements.GameTick,  Debug_ToString(target), event.name, Debug_ToString(causer)), "events")
 
     -- Mark as reported after no exclusion rule triggered
     ReplayEnhancements_SetProperty(target, "is_reported", true)
