@@ -1,7 +1,7 @@
-function ReplayEnhancementsAutoTest_Init()
-	local modes = {Live = "live", RecordReplay = "record-replay"}
-	local mode = modes.Live
+local modes = {Live = "live", RecordReplay = "record-replay"}
+local mode = modes.RecordReplay
 
+function ReplayEnhancementsAutoTest_Init()
 	---@type ScarModule[]
 	local modules = loadfile("replay-enhancements\\scar\\modules.scar")()
 	for _, module in ipairs(modules) do
@@ -24,7 +24,9 @@ Scar_AddInit(ReplayEnhancementsAutoTest_Init)
 
 function ReplayEnhancementsAutoTest_SetupTests()
 	-- Greatly increase event indicator display time
-	ReplayEnhancements.EventIndicatorDisplaySeconds = 60 * 60
+	if mode == modes.Live then
+		ReplayEnhancements.EventIndicatorDisplaySeconds = 60 * 60
+	end
 	local upgrades = {
 		UPG.BRITISH.PLATOON_BOFORS_RESEARCH_MP,
 	}
@@ -49,23 +51,25 @@ function ReplayEnhancementsAutoTest_SetupTests()
 	local player02 = World_GetPlayerAt(2)
 
 	Test_Describe({description = "Player name containing $\nPlayer name without $\nNon-ascii char player names", markers = mkr_test_miscellaneous}, function (context)
-		local raketen_01 = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.RAKETENWERFER43_88MM_PUPPCHEN_ANTITANK_GUN_SQUAD_MP, player01, mkr_miscellaneous_01)
-		local raketen_02 = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.RAKETENWERFER43_88MM_PUPPCHEN_ANTITANK_GUN_SQUAD_MP, player01, mkr_miscellaneous_02)
-		local raketen_03 = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.RAKETENWERFER43_88MM_PUPPCHEN_ANTITANK_GUN_SQUAD_MP, player01, mkr_miscellaneous_03)
-		-- Direct call
-		ReplayEnhancements_TryRegisterEvent(raketen_01.squad, raketen_01.squad, ReplayEnhancements.EventType.Killed, {
-			owner_display_name = Util_CreateLocString("$ch4k4L"), 
-		})
-		ReplayEnhancements_TryRegisterEvent(raketen_02.squad, raketen_02.squad, ReplayEnhancements.EventType.Killed, {
-			owner_display_name = Util_CreateLocString("ch4k4L"), 
-		})
-		ReplayEnhancements_TryRegisterEvent(raketen_03.squad, raketen_03.squad, ReplayEnhancements.EventType.Killed, {
-			owner_display_name = Util_CreateLocString("$ÄÖ¾"), 
-		})
-		Squad_Destroy(raketen_01.squad)
-		Squad_Destroy(raketen_02.squad)
-		Squad_Destroy(raketen_03.squad)
-		
+		local raketen_01 = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.RAKETENWERFER43_88MM_PUPPCHEN_ANTITANK_GUN_SQUAD_MP, player02, mkr_miscellaneous_01)
+		local raketen_02 = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.RAKETENWERFER43_88MM_PUPPCHEN_ANTITANK_GUN_SQUAD_MP, player02, mkr_miscellaneous_02)
+		local raketen_03 = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.RAKETENWERFER43_88MM_PUPPCHEN_ANTITANK_GUN_SQUAD_MP, player02, mkr_miscellaneous_03)
+		Squad_SetHealth(raketen_01.squad, 0.01)
+		Squad_SetHealth(raketen_02.squad, 0.01)
+		Squad_SetHealth(raketen_03.squad, 0.01)
+		-- Conditionally execute live-ish test
+		if ReplayEnhancements_TryRegisterEvent ~= nil then
+			ReplayEnhancements_TryRegisterEvent(raketen_01.squad, raketen_01.squad, ReplayEnhancements.EventType.Killed, {
+				owner_display_name = Util_CreateLocString("$ch4k4L"), 
+			})
+			ReplayEnhancements_TryRegisterEvent(raketen_02.squad, raketen_02.squad, ReplayEnhancements.EventType.Killed, {
+				owner_display_name = Util_CreateLocString("ch4k4L"), 
+			})
+			ReplayEnhancements_TryRegisterEvent(raketen_03.squad, raketen_03.squad, ReplayEnhancements.EventType.Killed, {
+				owner_display_name = Util_CreateLocString("$ÄÖ¾"), 
+			})
+		end
+		Test_CreateAndSpawnSquad(SBP.AEF.RIFLEMEN_SQUAD_MP, player01, mkr_test_miscellaneous)
 	end)
 	
 	Test_Describe({description = "Remove previous markers of same entities", markers = mkr_test_remove_previous_markers_of_same_entity}, function (context)
