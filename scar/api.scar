@@ -198,8 +198,9 @@ function ReplayEnhancements_UpdateTick()
             end
 
             ReplayEnhancements_SetProperty(squad, "override_display_name", nil)
-            ReplayEnhancements_SetProperty(squad, "is_vehicle_crew", false)
+            ReplayEnhancements_SetProperty(squad, "is_vehicle_crew", nil)
             ReplayEnhancements_SetProperty(squad, "vehicle_squad_id", nil)
+            ReplayEnhancements_SetProperty(squad, "is_vehicle", nil)
         end)
 
         SGroup_ForEach(sg_all_squads, function(_, _, squad)
@@ -212,6 +213,7 @@ function ReplayEnhancements_UpdateTick()
             local squad_size = Squad_Count(squad)
             local is_under_construction = false
             local entity_ids = {}
+            local is_vehicle = false
             for entity_index = 0, squad_size - 1 do
                 local entity = Squad_EntityAt(squad, entity_index)
                 table.insert(entity_ids, Entity_GetGameID(entity))
@@ -229,6 +231,10 @@ function ReplayEnhancements_UpdateTick()
                 end
 
                 ReplayEnhancements_SetProperty(entity, "squad_id", squad_id)
+
+                if Entity_IsOfType(entity, "vehicle") then
+                    is_vehicle = true
+                end 
             end
 
             local driver_squad = Squad_GetVehicleMobileDriverSquad(squad)
@@ -262,6 +268,7 @@ function ReplayEnhancements_UpdateTick()
             ReplayEnhancements_SetProperty(squad, "is_result_of_abandon", abandoned_crew_member_count == squad_size)
             ReplayEnhancements_SetProperty(squad, "is_under_construction", is_under_construction)
             ReplayEnhancements_SetProperty(squad, "entity_ids", entity_ids)
+            ReplayEnhancements_SetProperty(squad, "is_vehicle", is_vehicle)
         end)
     end
 
@@ -391,8 +398,12 @@ function ReplayEnhancements_TryRegisterEvent(target, causer, event, overrides)
         end
     end
 
+    local hintpoint_height = 0
+    if ReplayEnhancements_GetProperty(target, "is_vehicle") then
+        hintpoint_height = 2
+    end
     -- No icon on the hintpoint; instead let ThreatArrow icon display
-    local hintpoint_id = HintPoint_Add(position, true, title, 0, HPAT_Bonus, "")
+    local hintpoint_id = HintPoint_Add(position, true, title, hintpoint_height, HPAT_Bonus, "")
     local event_id = UI_CreateEventCueClickable(icon, "", title, LOC(""), ReplayEnhancements_EventQueueClickCallback, 30, true)
     local map_icon_id = MapIcon_CreatePosition(position, map_icon, 24, 255, 0, 0, 255)
     local minimap_blip_id = UI_CreateMinimapBlip(position, ReplayEnhancements.EventIndicatorDisplaySeconds, BT_Reveal)
