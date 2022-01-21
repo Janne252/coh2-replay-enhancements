@@ -23,7 +23,7 @@
 1. Unpause the game
 
 # Known issues
-_None at the moment_
+See [issues marked with the **Known issue** label](https://github.com/Janne252/coh2-replay-enhancements/issues?q=is%3Aissue+is%3Aopen+label%3A%22Known+issue%22)
 
 # Troubleshooting
 - `Fatal Scar Error - Execution Paused` message during replay playback
