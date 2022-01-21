@@ -1,6 +1,6 @@
 # Changelog 
 
-## [0.3.0] - 2022-01-19
+## [0.3.0] - 2022-01-21
 - Fixed an issue where US Forces vehicles may in some situations still report default crew death
     - If the vehicle crew is not _a default vehicle crew_, its death will be reported with position fixed next to the vehicle. Additionally the vehicle crew label will be suffixed with `(Vehicle Crew)`.
 - Fixed Pak43 scuttle not being detected
