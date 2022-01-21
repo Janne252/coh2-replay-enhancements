@@ -137,6 +137,7 @@ end
 function ReplayEnhancements_OnSquadKilled(squad, last_entity)
     local causer = nil
     if scartype(last_entity) == ST_ENTITY then
+        -- Try to figure out what killed the squad based on last_entity info
         local causer_squad_id = ReplayEnhancements_GetProperty(last_entity, "squad_id")
         if causer_squad_id ~= nil and causer_squad_id == Squad_GetGameID(squad) then
             local death_causer_id = ReplayEnhancements_GetProperty(last_entity, "death_causer_id")
@@ -146,7 +147,7 @@ function ReplayEnhancements_OnSquadKilled(squad, last_entity)
         end
     end
     ReplayEnhancements_TryRegisterEvent(squad, causer, ReplayEnhancements.EventType.Killed)
-    --Debug_Log(string.format("%06d %s was killed by %s", ReplayEnhancements.GameTick, Debug_ToString(squad), Debug_ToString(causer)), "deaths")
+    --Debug_Log(string.format("%06d %s was killed by %s (last_entity / 2nd parameter: %s)", ReplayEnhancements.GameTick, Debug_ToString(squad), Debug_ToString(causer), Debug_ToString(last_entity)), "deaths")
 end
 
 function ReplayEnhancements_OnEntityKilled(entity, causer)
@@ -301,6 +302,13 @@ function ReplayEnhancements_TryRegisterEvent(target, causer, event, overrides)
             return
         end
 
+        -- Ignore unknown causer events of unfinished constructions
+        ---@TODO this incorrectly ignores actual deaths of unfinished construction entities killed by some off-map airstrikes like the stuka dive bomb
+        if ReplayEnhancements_GetProperty(target, "is_under_construction") and causer == nil then
+            Debug_Log(string.format("%06d %s is_under_construction, causer == nil", ReplayEnhancements.GameTick, Debug_ToString(target)), "exit")
+            return
+        end
+
         entity_ids = {Entity_GetGameID(target)}
 
     elseif item_type == ST_SQUAD then
@@ -326,6 +334,13 @@ function ReplayEnhancements_TryRegisterEvent(target, causer, event, overrides)
             end
         end
 
+        -- Ignore unknown causer events of unfinished constructions
+        ---@TODO this incorrectly ignores actual deaths of unfinished construction squads killed by some off-map airstrikes like the stuka dive bomb
+        if ReplayEnhancements_GetProperty(target, "is_under_construction") and causer == nil then
+            Debug_Log(string.format("%06d %s is_under_construction, causer == nil", ReplayEnhancements.GameTick, Debug_ToString(target)), "exit")
+            return
+        end
+
         -- Abandons occur before death; see if the squad was actually abandoned
         -- Team weapon abandons are reported immediately, all other abandons wait for GE_SquadKilled event
         if ReplayEnhancements_GetProperty(target, "is_abandoned") then
@@ -338,14 +353,16 @@ function ReplayEnhancements_TryRegisterEvent(target, causer, event, overrides)
     -- Ignore all non-causer events 
     -- except abandons which don't have a reliably accessible causer
     -- Except deaths of vehicle crews whose death causer doesn't have a reliably accessible causer
-    if 
-        causer == nil 
-        and event ~= ReplayEnhancements.EventType.Abandoned 
-        and not ReplayEnhancements_GetProperty(target, "is_vehicle_crew")
-    then
-        --Debug_Log(string.format("%06d [%s] %s causer is NIL", ReplayEnhancements.GameTick, scartype_tostring(target), Item_GetBlueprintName(target)), "exit")
-        return
-    end
+    -- Forced to report events without causer; some air strikes like stuka dive bomb don't report death causer
+    -- if 
+    --     causer == nil 
+    --     and event ~= ReplayEnhancements.EventType.Abandoned 
+    --     and not ReplayEnhancements_GetProperty(target, "is_vehicle_crew")
+    -- then
+    --     --Debug_Log(string.format("%06d [%s] %s causer is NIL", ReplayEnhancements.GameTick, scartype_tostring(target), Item_GetBlueprintName(target)), "exit")
+    --     return
+    -- end
+    ---@TODO some self-destruct-like abilities that can be cancelled/interrupted are difficult to detect, e.g. tearing down an emplacement
 
     --Debug_Log(string.format("%06d %s event <%s> causer %s",  ReplayEnhancements.GameTick,  Debug_ToString(target), event.name, Debug_ToString(causer)), "events")
 
