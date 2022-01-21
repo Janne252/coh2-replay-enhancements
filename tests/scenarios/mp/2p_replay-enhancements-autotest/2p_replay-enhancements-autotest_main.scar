@@ -50,21 +50,21 @@ function ReplayEnhancementsAutoTest_SetupTests()
 	local player01 = World_GetPlayerAt(1)
 	local player02 = World_GetPlayerAt(2)
 
-	Test_Describe({description = "Don't report goliath death\nReport goliath victim death", markers =  mkr_test_death_by_goliath_alpha, focus = true, only = true}, function(context)
+	Test_Describe({description = "Don't report goliath death\nReport goliath victim death", markers =  mkr_test_death_by_goliath_alpha}, function(context)
 		local goliath = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.GOLIATH_MP, player01, mkr_death_by_goliath_alpha_spawn)
 		local victim = Test_CreateAndSpawnSquad(SBP.SOVIET.SNIPER_TEAM_MP, player02, Util_GetOffsetPosition(mkr_death_by_goliath_alpha_spawn, OFFSET_FRONT, 1))
 		Util_Delay(1, function()
 			Command_SquadAbility(player01, goliath.sgroup,ABILITY.GERMAN.GOLIATH_SELF_DESTRUCT_MP, true, false)
 		end)
 	end)
-	Test_Describe({description = "Don't report killed goliath death?\nReport goliath victim death", markers =  mkr_test_death_by_goliath_bravo, focus = true, only = true}, function(context)
+	Test_Describe({description = "Don't report killed goliath death?\nReport goliath victim death", markers =  mkr_test_death_by_goliath_bravo}, function(context)
 		local goliath = Test_CreateAndSpawnSquad(SBP.WEST_GERMAN.GOLIATH_MP, player01, mkr_death_by_goliath_bravo_spawn)
 		Squad_SetHealth(goliath.squad, 0.01)
 		local victim = Test_CreateAndSpawnSquad(SBP.BRITISH.SNIPER_BRITISH_SQUAD_MP, player02, Util_GetOffsetPosition(mkr_death_by_goliath_bravo_spawn, OFFSET_FRONT, 1))
 		Cmd_Attack(victim.sgroup, goliath.sgroup, false)
 	end)
 
-	Test_Describe({description = "Report death by airstrike (player-owned projectile entities)", markers = mkr_test_death_by_airstrike_alpha, only = true}, function(context)
+	Test_Describe({description = "Report death by airstrike (neutral owned projectile entities)", markers = mkr_test_death_by_airstrike_alpha}, function(context)
 		local victim = Test_CreateAndSpawnSquad(SBP.SOVIET.SNIPER_TEAM_MP, player02, mkr_death_by_airstrike_alpha_spawn)
 		Util_Delay(1, function()
 			Test_AddAndUnlockPlayerAbility(ABILITY.GERMAN.STUKA_BOMBING_STRIKE, player01)
@@ -72,7 +72,7 @@ function ReplayEnhancementsAutoTest_SetupTests()
 		end)
 	end)
 
-	Test_Describe({description = "Report death by airstrike (neutral owned projectile entities)", markers = mkr_test_death_by_airstrike_bravo, only = true}, function(context)
+	Test_Describe({description = "Report death by airstrike (player-owned projectile entities)", markers = mkr_test_death_by_airstrike_bravo}, function(context)
 		local victim = Test_CreateAndSpawnSquad(SBP.SOVIET.SNIPER_TEAM_MP, player02, mkr_death_by_airstrike_bravo_spawn)
 		Util_Delay(1, function()
 			Test_AddAndUnlockPlayerAbility(ABILITY.GERMAN.STUKA_FRAGMENTATION_BOMB, player01)
@@ -97,7 +97,8 @@ function ReplayEnhancementsAutoTest_SetupTests()
 				owner_display_name = Util_CreateLocString("ch4k4L"), 
 			})
 			ReplayEnhancements_TryRegisterEvent(raketen_03.squad, raketen_03.squad, ReplayEnhancements.EventType.Killed, {
-				owner_display_name = Util_CreateLocString("$ÄÖ¾"), 
+				-- Suffixed with Korean, Chinese, and Japanese characters
+				owner_display_name = Util_CreateLocString("$ÄÖ¾ 네 是的 はい"), 
 			})
 		end
 		Test_CreateAndSpawnSquad(SBP.AEF.RIFLEMEN_SQUAD_MP, player01, mkr_test_miscellaneous)
